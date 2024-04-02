@@ -9,7 +9,7 @@ import DefaultTokenIcon from './default-token.png';
 
 export const ContractName = 'tkn.near';
 const SimplePool = 'SIMPLE_POOL';
-const RefContractId = 'ref-finance.near';
+const RefContractId = 'v2.ref-finance.near';
 const ExplorerBaseUrl = 'https://explorer.near.org';
 const wNEAR = 'wrap.near';
 export const OneNear = Big(10).pow(24);
@@ -28,31 +28,35 @@ const ot = (pool, token) => (token in pool.tokens ? pool.tt[1 - pool.tt.indexOf(
 export const toTokenAccountId = (tokenId) => `${tokenId.toLowerCase()}.${ContractName}`;
 
 function Table({ columns, data }) {
-  // Use the state and functions returned from useTable to build your UI
   const { getTableProps, headerGroups, rows, prepareRow } = useTable({
     columns,
     data
   });
 
-  // Render the UI for your table
   return (
     <BTable striped bordered hover {...getTableProps()}>
       <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+        {headerGroups.map((headerGroup, index) => (
+          <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column, index) => (
+              <th key={index} {...column.getHeaderProps()}>
+                {column.render('Header')}
+              </th>
             ))}
           </tr>
         ))}
       </thead>
       <tbody>
-        {rows.map((row, i) => {
+        {rows.map((row, index) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => {
-                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+            <tr key={index} {...row.getRowProps()}>
+              {row.cells.map((cell, index) => {
+                return (
+                  <td key={index} {...cell.getCellProps()}>
+                    {cell.render('Cell')}
+                  </td>
+                );
               })}
             </tr>
           );
@@ -69,6 +73,10 @@ export class Tokens extends React.Component {
     this.lsKey = props.lsKey;
     this.lsKeySortedBy = this.lsKey + 'sortedBy';
     this.balances = {};
+    this.formatter = new Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      compactDisplay: 'short'
+    });
 
     this.state = {
       tokens: [...this.tokens],
@@ -92,56 +100,77 @@ export class Tokens extends React.Component {
       {
         Header: 'Symbol',
         accessor: 'token_id',
-        Cell: ({ row }) => (
-          <a
-            href={`${ExplorerBaseUrl}/accounts/${row.original.metadata.symbol.toLowerCase()}.${ContractName}`}
-          >
-            {row.original.metadata.symbol}
-          </a>
-        )
+        Cell: ({ row }) => {
+          const { symbol } = row.original.metadata;
+          return (
+            <a
+              target="_blank"
+              href={`${ExplorerBaseUrl}/accounts/${symbol.toLowerCase()}.${ContractName}`}
+              rel="noreferrer"
+            >
+              {symbol.length > 15 ? `${symbol.substring(0, 4)}...${symbol.substr(-2)}` : symbol}
+            </a>
+          );
+        }
       },
       {
         Header: () => <span style={{ whiteSpace: 'nowrap' }}>Token Name</span>,
         accessor: 'name',
-        Cell: ({ row }) => row.original.metadata.name
+        Cell: ({ row }) => {
+          const { name } = row.original.metadata;
+          if (name.length > 20) {
+            return name.substring(0, 20) + '...';
+          }
+          return name;
+        }
       },
       {
         Header: 'Owner ID',
         accessor: 'owner_id',
-        Cell: ({ row }) => (
-          <a href={`${ExplorerBaseUrl}/accounts/${row.original.owner_id}`}>
-            {row.original.owner_id}
-          </a>
-        )
+        Cell: ({ row }) => {
+          const { owner_id } = row.original;
+          return (
+            <a target="_blank" href={`${ExplorerBaseUrl}/accounts/${owner_id}`} rel="noreferrer">
+              {owner_id.length > 20
+                ? `${owner_id.substring(0, 6)}...${owner_id.substr(-4)}`
+                : owner_id}
+            </a>
+          );
+        }
       },
       {
         Header: 'Total Supply',
         accessor: 'total_supply',
-        Cell: ({ row }) =>
-          Big(row.original.total_supply)
+        Cell: ({ row }) => {
+          const total_supply = Big(row.original.total_supply)
             .div(Big(10).pow(row.original.metadata.decimals))
-            .round(0, 0)
-            .toFixed(0)
+            .round(0, 0);
+          if (total_supply.gt(Big(10).pow(24))) {
+            return 'way too much';
+          }
+          return this.formatter.format(total_supply.toFixed(0));
+        }
       },
       {
         Header: 'Ref Finance',
         accessor: 'REF',
         Cell: ({ row }) => {
-          const liq = this.poolLiquidity(row.original.metadata.symbol);
-          const bestPool = this.state.bestPool[toTokenAccountId(row.original.metadata.symbol)];
-          const price = this.tokenPrice(row.original.metadata.symbol);
+          const { symbol, decimals } = row.original.metadata;
+          const liq = this.poolLiquidity(symbol);
+          const bestPool = this.state.bestPool[toTokenAccountId(symbol)];
+          const price = this.tokenPrice(symbol);
 
           return (
             <div>
-              {this.poolExists(row.original.metadata.symbol) && (
+              {this.poolExists(symbol) && (
                 <div>
                   <a
                     className="btn btn-outline-success"
                     target="_blank"
                     rel="noopener noreferrer"
-                    href={`https://app.ref.finance/#wrap.near|${toTokenAccountId(row.original.metadata.symbol)}`}
+                    href={`https://app.ref.finance/#wrap.near|${toTokenAccountId(symbol)}`}
                   >
-                    Buy <b>{row.original.metadata.symbol}</b>
+                    Buy <b>{symbol}</b>
                   </a>
                 </div>
               )}
@@ -168,8 +197,7 @@ export class Tokens extends React.Component {
               {!!price && (
                 <div>
                   <span className="text-muted">Price</span>{' '}
-                  {price.div(Big(10).pow(row.original.metadata.decimals)).toFixed(3)}{' '}
-                  <b>{row.original.metadata.symbol}</b>
+                  {price.div(Big(10).pow(decimals)).toFixed(3)} <b>{symbol}</b>
                 </div>
               )}
             </div>
@@ -377,7 +405,7 @@ export class Tokens extends React.Component {
     const contract = this.props.contract;
     const numTokens = await contract.get_number_of_tokens();
     const tokens = this.tokens;
-    const limit = 5;
+    const limit = 100;
     for (let i = tokens.length; i < numTokens; i += limit) {
       const newTokens = await contract.get_tokens({ from_index: i, limit });
       tokens.push(...newTokens);
@@ -420,14 +448,14 @@ export class Tokens extends React.Component {
   }
 
   async refreshRefPools() {
-    // const numPools = await this._refContract.get_number_of_pools();
-    const numPools = 4000;
-    const promises = [];
+    const numPools = await this._refContract.get_number_of_pools();
     const limit = 1_000;
+    let rawPools = [];
     for (let i = 0; i < numPools; i += limit) {
-      promises.push(this._refContract.get_pools({ from_index: i, limit }));
+      const nextPools = await this._refContract.get_pools({ from_index: i, limit });
+      if (nextPools.length === 0) break;
+      rawPools = rawPools.concat(nextPools);
     }
-    const rawPools = (await Promise.all(promises)).flat();
     const pools = {};
     rawPools.forEach((pool, i) => {
       if (pool.pool_kind === SimplePool) {
@@ -457,6 +485,7 @@ export class Tokens extends React.Component {
 
     const bestPool = {};
 
+    console.log('pools', pools);
     Object.values(pools).forEach((pool) => {
       if (wNEAR in pool.tokens) {
         const wNearAmount = pool.tokens[wNEAR];

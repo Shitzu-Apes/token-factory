@@ -4,7 +4,7 @@
   "homepage": "",
   "packageManager": "yarn@1.22.21",
   "engines": {
-    "node": "<=16"
+    "node": ">=18"
   },
   "private": true,
   "dependencies": {

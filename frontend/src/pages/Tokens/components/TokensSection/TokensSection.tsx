@@ -1,5 +1,4 @@
 import Big from 'big.js';
-import ls from 'local-storage';
 import * as nearAPI from 'near-api-js';
 import React from 'react';
 
@@ -32,7 +31,9 @@ export const toTokenAccountId = (tokenId) => `${tokenId.toLowerCase()}.${Contrac
 class TokensSection extends React.Component {
   constructor(props) {
     super(props);
-    this.tokens = ls.get(props.lsKeyCachedTokens) || [];
+    this.tokens = window.localStorage.getItem(props.lsKeyCachedTokens)
+      ? JSON.parse(window.localStorage.getItem(props.lsKeyCachedTokens))
+      : [];
     this.lsKey = props.lsKey;
     this.lsKeySortedBy = this.lsKey + 'sortedBy';
     this.balances = {};
@@ -46,7 +47,9 @@ class TokensSection extends React.Component {
       prices: {},
       liquidity: {},
       bestPool: {},
-      sortedBy: ls.get(this.lsKeySortedBy) || SortedByLiquidity
+      sortedBy: window.localStorage.getItem(this.lsKeySortedBy)
+        ? JSON.parse(window.localStorage.getItem(this.lsKeySortedBy))
+        : SortedByLiquidity
     };
     this.columns = [
       {
@@ -360,16 +363,20 @@ class TokensSection extends React.Component {
     for (let i = tokens.length; i < numTokens; i += limit) {
       const newTokens = await contract.get_tokens({ from_index: i, limit });
       tokens.push(...newTokens);
-      ls.set(this.props.lsKeyCachedTokens, tokens);
+      window.localStorage.setItem(this.props.lsKeyCachedTokens, JSON.stringify(tokens));
       this.updateTokens();
     }
   }
 
   updateTokens() {
     this.setState({
-      tokens: this.sortTokens([...(ls.get(this.props.lsKeyCachedTokens) || [])])
+      tokens: this.sortTokens([
+        ...(window.localStorage.getItem(this.props.lsKeyCachedTokens)
+          ? JSON.parse(window.localStorage.getItem(this.props.lsKeyCachedTokens))
+          : [])
+      ])
     });
-    ls.set(this.lsKeySortedBy, this.state.sortedBy);
+    window.localStorage.setItem(this.lsKeySortedBy, JSON.stringify(this.state.sortedBy));
   }
 
   async refreshRefBalances() {

@@ -1,6 +1,5 @@
 import './App.css';
 import Big from 'big.js';
-import ls from 'local-storage';
 import * as nearAPI from 'near-api-js';
 import React from 'react';
 
@@ -74,11 +73,16 @@ class App extends React.Component {
   };
 
   async _initYourToken() {
-    const args = ls.get(this.lsKeyToken);
+    const args = window.localStorage.getItem(this.lsKeyToken)
+      ? JSON.parse(window.localStorage.getItem(this.lsKeyToken))
+      : undefined;
+    console.log('_initYourToken', args);
     if (args) {
-      const createToken = ls.get(this.lsKeyCreateToken);
+      const createToken = window.localStorage.getItem(this.lsKeyCreateToken)
+        ? JSON.parse(window.localStorage.getItem(this.lsKeyCreateToken))
+        : undefined;
       if (createToken) {
-        ls.remove(this.lsKeyCreateToken);
+        window.localStorage.removeItem(this.lsKeyCreateToken);
         this.setState({
           creating: true
         });
@@ -96,7 +100,7 @@ class App extends React.Component {
           });
           // Transaction was canceled.
         }
-        ls.remove(this.lsKeyToken);
+        window.localStorage.removeItem(this.lsKeyToken);
         this.setState({
           creating: false,
           readyForWalletWhitelist: true,
@@ -336,8 +340,8 @@ class App extends React.Component {
     });
     const args = this.constructArgs();
     const requiredDeposit = await this.computeRequiredDeposit(args);
-    ls.set(this.lsKeyToken, args);
-    ls.set(this.lsKeyCreateToken, true);
+    window.localStorage.setItem(this.lsKeyToken, JSON.stringify(args));
+    window.localStorage.setItem(this.lsKeyCreateToken, JSON.stringify(true));
     await this._contract.storage_deposit({}, BoatOfGas.toFixed(0), requiredDeposit.toFixed(0));
   }
 

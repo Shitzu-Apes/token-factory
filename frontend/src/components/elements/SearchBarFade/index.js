@@ -1,3 +1,3 @@
-import SearchBarFade from "./SearchBarFade";
+import SearchBarFade from './SearchBarFade';
 
 export default SearchBarFade;

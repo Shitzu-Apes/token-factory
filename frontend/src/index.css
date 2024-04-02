@@ -1,6 +1,6 @@
 @font-face {
-  font-family: "Manrope";
-  src: url("./assets/fonts/Manrope-Medium.woff") format("woff");
+  font-family: 'Manrope';
+  src: url('./assets/fonts/Manrope-Medium.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
@@ -14,8 +14,7 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 .tokens-table td {

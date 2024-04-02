@@ -90,7 +90,7 @@ const OptionsSection = ({
         <div>
           <p>
             Issue a new token. It'll cost you
-            <span className="font-weight-bold">{fromYocto(state.requiredDeposit)} Ⓝ</span>
+            <span className="font-weight-bold"> {fromYocto(state.requiredDeposit)} Ⓝ</span>
           </p>
           <div className="form-group">
             <label forhtml="tokenName">Token Name</label>

@@ -33,11 +33,11 @@
 .darkModeButtonPrimary {
   background-color: #5f8afa;
   color: white;
-  border: 1px solid #5f8afa!important;
+  border: 1px solid #5f8afa !important;
 }
 
 .darkModeButtonSecondary {
-  border: 1px solid #5f8afa!important;
+  border: 1px solid #5f8afa !important;
   color: white;
 }
 
@@ -52,4 +52,3 @@
 .tokensTableBlock {
   padding: 40px 0;
 }
-

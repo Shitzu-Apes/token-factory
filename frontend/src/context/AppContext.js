@@ -1,8 +1,8 @@
-import * as React from "react";
+import * as React from 'react';
 
 const AppContext = React.createContext({
-    isDarkMode: false,
-    toggleDarkMode: () => {}
+  isDarkMode: false,
+  toggleDarkMode: () => {}
 });
 
 const AppProvider = AppContext.Provider;

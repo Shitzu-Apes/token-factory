@@ -1,3 +1,3 @@
-import PaginationBox from "./PaginationBox";
+import PaginationBox from './PaginationBox';
 
 export default PaginationBox;

@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "homepage": "",
+  "packageManager": "yarn@1.22.21",
   "private": true,
   "dependencies": {
     "big.js": "^6.0.3",

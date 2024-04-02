@@ -23,21 +23,6 @@
     "preview": "npm run build && npm run start",
     "deploy": "yarn build && gh-pages -d build"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
     "@types/react": "^16",
     "@types/react-dom": "^16",

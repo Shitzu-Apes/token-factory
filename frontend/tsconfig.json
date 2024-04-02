@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts", "**/*.tsx", "**/src/**/*.ts", "**/src/**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["vite/client"],

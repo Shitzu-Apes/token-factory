@@ -7,4 +7,6 @@ Do you really want to be on the bottom of the list of issued tokens?
 
 Go to [Token Farm](https://tkn.farm) now and make your own token today.
 
+## License
 
+This code is forked from https://github.com/near-examples/token-factory

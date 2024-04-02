@@ -1,17 +1,18 @@
-import React from "react";
-import DefaultTokenIcon from "../../default-token.png";
-import Big from "big.js";
-import ls from "local-storage";
-import * as nearAPI from "near-api-js";
-import { Table } from "./Table/Table";
-import styles from "../../pages/Tokens/components/TokensSection/TokensSection.module.css";
-import SearchBar from "../elements/SearchBar";
-import PaginationBox from "../elements/PaginationBox";
-export const ContractName = "tkn.near";
-const SimplePool = "SIMPLE_POOL";
-const RefContractId = "ref-finance.near";
-const ExplorerBaseUrl = "https://explorer.near.org";
-const wNEAR = "wrap.near";
+import Big from 'big.js';
+import ls from 'local-storage';
+import * as nearAPI from 'near-api-js';
+import React from 'react';
+
+import PaginationBox from '../../../../components/elements/PaginationBox';
+import Table from '../../../../components/elements/Table';
+import DefaultTokenIcon from '../../../../default-token.png';
+
+import styles from './TokensSection.module.css';
+export const ContractName = 'tkn.near';
+const SimplePool = 'SIMPLE_POOL';
+const RefContractId = 'v2.ref-finance.near';
+const ExplorerBaseUrl = 'https://explorer.near.org';
+const wNEAR = 'wrap.near';
 export const OneNear = Big(10).pow(24);
 const TGas = Big(10).pow(12);
 export const BoatOfGas = Big(200).mul(TGas);
@@ -19,169 +20,189 @@ const RefStorageDeposit = Big(250).mul(Big(10).pow(19)).add(1);
 const StorageDeposit = Big(125).mul(Big(10).pow(19));
 const PoolStorageDeposit = Big(500).mul(Big(10).pow(19));
 
-const SortedByLiquidity = "liquidity";
-const SortedByYourTokens = "your";
-const SortedByIndex = "index";
-const rowsPerPage = 20;
+const SortedByLiquidity = 'liquidity';
+const SortedByYourTokens = 'your';
+const SortedByIndex = 'index';
+const rowsPerPage = 50;
 
-const ot = (pool, token) =>
-  token in pool.tokens ? pool.tt[1 - pool.tt.indexOf(token)] : null;
+const ot = (pool, token) => (token in pool.tokens ? pool.tt[1 - pool.tt.indexOf(token)] : null);
 
-export const toTokenAccountId = (tokenId) =>
-  `${tokenId.toLowerCase()}.${ContractName}`;
+export const toTokenAccountId = (tokenId) => `${tokenId.toLowerCase()}.${ContractName}`;
 
-class Tokens extends React.Component {
+class TokensSection extends React.Component {
   constructor(props) {
     super(props);
     this.tokens = ls.get(props.lsKeyCachedTokens) || [];
     this.lsKey = props.lsKey;
-    this.lsKeySortedBy = this.lsKey + "sortedBy";
+    this.lsKeySortedBy = this.lsKey + 'sortedBy';
     this.balances = {};
+    this.formatter = new Intl.NumberFormat('en-US', {
+      notation: 'compact',
+      compactDisplay: 'short'
+    });
 
     this.state = {
       tokens: [...this.tokens],
       prices: {},
       liquidity: {},
       bestPool: {},
-      sortedBy: ls.get(this.lsKeySortedBy) || SortedByLiquidity,
-      searchText: "",
-      currentPage: 1,
+      sortedBy: ls.get(this.lsKeySortedBy) || SortedByLiquidity
     };
     this.columns = [
       {
-        Header: "Icon",
-        accessor: "icon",
+        Header: 'Icon',
+        accessor: 'icon',
         Cell: ({ row }) => (
           <img
             className="rounded token-icon"
             src={row.original.metadata.icon || DefaultTokenIcon}
             alt="Icon"
           />
-        ),
+        )
       },
       {
-        Header: "Symbol",
-        accessor: "token_id",
-        Cell: ({ row }) => (
-          <a
-            href={`${ExplorerBaseUrl}/accounts/${row.original.metadata.symbol.toLowerCase()}.${ContractName}`}
-          >
-            {row.original.metadata.symbol}
-          </a>
-        ),
-      },
-      {
-        Header: () => <span style={{ whiteSpace: "nowrap" }}>Token Name</span>,
-        accessor: "name",
-        Cell: ({ row }) => row.original.metadata.name,
-      },
-      {
-        Header: "Owner ID",
-        accessor: "owner_id",
-        Cell: ({ row }) => (
-          <a href={`${ExplorerBaseUrl}/accounts/${row.original.owner_id}`}>
-            {row.original.owner_id}
-          </a>
-        ),
-      },
-      {
-        Header: "Total Supply",
-        accessor: "total_supply",
-        Cell: ({ row }) =>
-          Big(row.original.total_supply)
-            .div(Big(10).pow(row.original.metadata.decimals))
-            .round(0, 0)
-            .toFixed(0),
-      },
-      /* {
-        Header: 'Ref Finance',
-        accessor: 'REF',
-        Cell: ({row}) => {
-          const liq = this.poolLiquidity(row.original.metadata.symbol);
-          const bestPool = this.state.bestPool[toTokenAccountId(row.original.metadata.symbol)];
-          const price = this.tokenPrice(row.original.metadata.symbol);
-
+        Header: 'Symbol',
+        accessor: 'token_id',
+        Cell: ({ row }) => {
+          const { symbol } = row.original.metadata;
           return (
-            <div>
-              {this.poolExists(row.original.metadata.symbol) && (
-                <div>
-                  <a
-                    className="btn btn-outline-success"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={`https://app.ref.finance/#wrap.near|${toTokenAccountId(row.original.metadata.symbol)}`}>
-                    Buy <b>{row.original.metadata.symbol}</b>
-                  </a>
-                </div>
-              )}
-              {
-                liq.gt(0) ? (
-                  <div>
-                    <span className="text-muted">Liquidity</span> {liq.div(OneNear).toFixed(3)} <b>wNEAR</b>
-                  </div>
-                ) : !!props.accountId && (!!bestPool ? (
-                  <a
-                    className="btn btn-outline-success"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={`https://app.ref.finance/pool/${bestPool.index}`}>
-                    Add Liquidity
-                  </a>
-                ) : this.renderListingToken(row.original))
-              }
-              {!!price && (
-                <div>
-                  <span className="text-muted">Price</span> {price.div(Big(10).pow(row.original.metadata.decimals)).toFixed(3)} <b>{row.original.metadata.symbol}</b>
-                </div>
-              )}
-            </div>
-          )
+            <a
+              target="_blank"
+              href={`${ExplorerBaseUrl}/accounts/${symbol.toLowerCase()}.${ContractName}`}
+              rel="noreferrer"
+            >
+              {symbol.length > 15 ? `${symbol.substring(0, 4)}...${symbol.substr(-2)}` : symbol}
+            </a>
+          );
         }
       },
       {
-        Header: 'Wallet',
-        accessor: 'wallet',
-        Cell: ({row}) => props.accountId && <button
-          className="btn btn-outline-secondary"
-          onClick={() => this.registerToken(row.original.metadata.symbol)}>Add to Wallet</button>
-      },*/
+        Header: () => <span style={{ whiteSpace: 'nowrap' }}>Token Name</span>,
+        accessor: 'name',
+        Cell: ({ row }) => {
+          const { name } = row.original.metadata;
+          if (name.length > 20) {
+            return name.substring(0, 20) + '...';
+          }
+          return name;
+        }
+      },
+      {
+        Header: 'Owner ID',
+        accessor: 'owner_id',
+        Cell: ({ row }) => {
+          const { owner_id } = row.original;
+          return (
+            <a target="_blank" href={`${ExplorerBaseUrl}/accounts/${owner_id}`} rel="noreferrer">
+              {owner_id.length > 20
+                ? `${owner_id.substring(0, 6)}...${owner_id.substr(-4)}`
+                : owner_id}
+            </a>
+          );
+        }
+      },
+      {
+        Header: 'Total Supply',
+        accessor: 'total_supply',
+        Cell: ({ row }) => {
+          const total_supply = Big(row.original.total_supply)
+            .div(Big(10).pow(row.original.metadata.decimals))
+            .round(0, 0);
+          if (total_supply.gt(Big(10).pow(24))) {
+            return 'way too much';
+          }
+          return this.formatter.format(total_supply.toFixed(0));
+        }
+      },
+      {
+        Header: 'Ref Finance',
+        accessor: 'REF',
+        Cell: ({ row }) => {
+          const { symbol, decimals } = row.original.metadata;
+          const liq = this.poolLiquidity(symbol);
+          const bestPool = this.state.bestPool[toTokenAccountId(symbol)];
+          const price = this.tokenPrice(symbol);
+
+          return (
+            <div>
+              {this.poolExists(symbol) && (
+                <div>
+                  <a
+                    className="btn btn-outline-success"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={`https://app.ref.finance/#wrap.near|${toTokenAccountId(symbol)}`}
+                  >
+                    Buy <b>{symbol}</b>
+                  </a>
+                </div>
+              )}
+              {liq.gt(0) ? (
+                <div>
+                  <span className="text-muted">Liquidity</span>{' '}
+                  {this.formatter.format(liq.div(OneNear).toFixed(3))} <b>wNEAR</b>
+                </div>
+              ) : (
+                !!props.accountId &&
+                (bestPool ? (
+                  <a
+                    className="btn btn-outline-success"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href={`https://app.ref.finance/pool/${bestPool.index}`}
+                  >
+                    Add Liquidity
+                  </a>
+                ) : (
+                  this.renderListingToken(row.original)
+                ))
+              )}
+              {!!price && (
+                <div>
+                  <span className="text-muted">Price</span> 1N ={' '}
+                  {this.formatter.format(price.div(Big(10).pow(decimals)).toFixed(3))}{' '}
+                  <b>{symbol}</b>
+                </div>
+              )}
+            </div>
+          );
+        }
+      }
     ];
     this._initialized = false;
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handlePage = this.handlePage.bind(this);
   }
 
   async refRegisterToken(tokenId) {
     const tokenAccountId = toTokenAccountId(tokenId);
     await this._refContract.account.signAndSendTransaction(RefContractId, [
       nearAPI.transactions.functionCall(
-        "storage_deposit",
+        'storage_deposit',
         {
           account_id: this._accountId,
-          registration_only: false,
+          registration_only: false
         },
         TGas.mul(5).toFixed(0),
         RefStorageDeposit.toFixed(0)
       ),
       nearAPI.transactions.functionCall(
-        "register_tokens",
+        'register_tokens',
         {
-          token_ids: [tokenAccountId],
+          token_ids: [tokenAccountId]
         },
         TGas.mul(5).toFixed(0),
         0
-      ),
+      )
     ]);
   }
 
   async registerToken(tokenId) {
     const tokenContractId = toTokenAccountId(tokenId);
     const tokenContract = new nearAPI.Contract(this._account, tokenContractId, {
-      changeMethods: ["storage_deposit"],
+      changeMethods: ['storage_deposit']
     });
     await tokenContract.storage_deposit(
       {
-        registration_only: true,
+        registration_only: true
       },
       BoatOfGas.toFixed(0),
       StorageDeposit.toFixed(0)
@@ -190,31 +211,31 @@ class Tokens extends React.Component {
 
   async refDepositToken(tokenAccountId) {
     const tokenContract = new nearAPI.Contract(this._account, tokenAccountId, {
-      viewMethods: ["ft_balance_of"],
+      viewMethods: ['ft_balance_of']
     });
-    let amount = await tokenContract.ft_balance_of({
-      account_id: this._accountId,
+    const amount = await tokenContract.ft_balance_of({
+      account_id: this._accountId
     });
     await this._account.signAndSendTransaction(tokenAccountId, [
       nearAPI.transactions.functionCall(
-        "storage_deposit",
+        'storage_deposit',
         {
           account_id: RefContractId,
-          registration_only: true,
+          registration_only: true
         },
         TGas.mul(5).toFixed(0),
         StorageDeposit.toFixed(0)
       ),
       nearAPI.transactions.functionCall(
-        "ft_transfer_call",
+        'ft_transfer_call',
         {
           receiver_id: RefContractId,
           amount,
-          msg: "",
+          msg: ''
         },
         TGas.mul(100).toFixed(0),
-        "1"
-      ),
+        '1'
+      )
     ]);
   }
 
@@ -222,7 +243,7 @@ class Tokens extends React.Component {
     await this._refContract.add_simple_pool(
       {
         tokens: [wNEAR, tokenAccountId],
-        fee: 25,
+        fee: 25
       },
       TGas.mul(30).toFixed(0),
       PoolStorageDeposit.toFixed(0)
@@ -276,26 +297,26 @@ class Tokens extends React.Component {
     this._accountId = this._account.accountId;
     this._refContract = new nearAPI.Contract(this._account, RefContractId, {
       viewMethods: [
-        "get_number_of_pools",
-        "get_whitelisted_tokens",
-        "storage_balance_of",
-        "get_deposits",
-        "get_pool",
-        "get_pools",
-        "get_pool_volumes",
-        "get_pool_shares",
-        "get_return",
-        "get_owner",
+        'get_number_of_pools',
+        'get_whitelisted_tokens',
+        'storage_balance_of',
+        'get_deposits',
+        'get_pool',
+        'get_pools',
+        'get_pool_volumes',
+        'get_pool_shares',
+        'get_return',
+        'get_owner'
       ],
       changeMethods: [
-        "add_simple_pool",
-        "storage_deposit",
-        "register_tokens",
-        "add_liquidity",
-        "remove_liquidity",
-        "swap",
-        "withdraw",
-      ],
+        'add_simple_pool',
+        'storage_deposit',
+        'register_tokens',
+        'add_liquidity',
+        'remove_liquidity',
+        'swap',
+        'withdraw'
+      ]
     });
 
     this.refetchTokens();
@@ -335,7 +356,7 @@ class Tokens extends React.Component {
     const contract = this.props.contract;
     const numTokens = await contract.get_number_of_tokens();
     const tokens = this.tokens;
-    const limit = 5;
+    const limit = 100;
     for (let i = tokens.length; i < numTokens; i += limit) {
       const newTokens = await contract.get_tokens({ from_index: i, limit });
       tokens.push(...newTokens);
@@ -346,16 +367,14 @@ class Tokens extends React.Component {
 
   updateTokens() {
     this.setState({
-      tokens: this.sortTokens([
-        ...(ls.get(this.props.lsKeyCachedTokens) || []),
-      ]),
+      tokens: this.sortTokens([...(ls.get(this.props.lsKeyCachedTokens) || [])])
     });
     ls.set(this.lsKeySortedBy, this.state.sortedBy);
   }
 
   async refreshRefBalances() {
     if (this._accountId) {
-      const balances = await this._refContract.get_deposits({account_id: this._accountId});
+      const balances = await this._refContract.get_deposits({ account_id: this._accountId });
       Object.keys(balances).forEach((key) => {
         balances[key] = Big(balances[key]);
       });
@@ -373,21 +392,17 @@ class Tokens extends React.Component {
         prices: this.ref.prices,
         liquidity: this.ref.liquidity,
         bestPool: this.ref.bestPool,
-        balances: this.balances,
+        balances: this.balances
       },
       () => this.updateTokens()
     );
   }
 
   async refreshRefPools() {
-    let numPools = 0;
-    try {
-        numPools = await this._refContract.get_number_of_pools();
-    } catch (err) {
-        console.log(err)
-    }
+    const numPools = await this._refContract.get_number_of_pools();
+
     const promises = [];
-    const limit = 100;
+    const limit = 1_000;
     for (let i = 0; i < numPools; i += limit) {
       promises.push(this._refContract.get_pools({ from_index: i, limit }));
     }
@@ -404,19 +419,19 @@ class Tokens extends React.Component {
             return acc;
           }, {}),
           fee: pool.total_fee,
-          shares: Big(pool.shares_total_supply),
+          shares: Big(pool.shares_total_supply)
         };
         pools[p.index] = p;
       }
     });
     this.ref = {
-      pools,
+      pools
     };
 
     const liquidity = {};
 
     const prices = {
-      [wNEAR]: OneNear,
+      [wNEAR]: OneNear
     };
 
     const bestPool = {};
@@ -426,28 +441,18 @@ class Tokens extends React.Component {
         const wNearAmount = pool.tokens[wNEAR];
         pool.otherToken = ot(pool, wNEAR);
 
-        if (
-          !(pool.otherToken in bestPool) ||
-          bestPool[pool.otherToken].liquidity.lt(wNearAmount)
-        ) {
+        if (!(pool.otherToken in bestPool) || bestPool[pool.otherToken].liquidity.lt(wNearAmount)) {
           bestPool[pool.otherToken] = {
             liquidity: wNearAmount,
-            index: pool.index,
+            index: pool.index
           };
         }
         if (wNearAmount.lt(OneNear)) {
           return;
         }
-        liquidity[pool.otherToken] = (liquidity[pool.otherToken] || Big(0)).add(
-          wNearAmount
-        );
-        pool.price = pool.tokens[pool.otherToken]
-          .mul(OneNear)
-          .div(pool.tokens[wNEAR]);
-        if (
-          !(pool.otherToken in prices) ||
-          prices[pool.otherToken].gt(pool.price)
-        ) {
+        liquidity[pool.otherToken] = (liquidity[pool.otherToken] || Big(0)).add(wNearAmount);
+        pool.price = pool.tokens[pool.otherToken].mul(OneNear).div(pool.tokens[wNEAR]);
+        if (!(pool.otherToken in prices) || prices[pool.otherToken].gt(pool.price)) {
           prices[pool.otherToken] = pool.price;
         }
       }
@@ -469,20 +474,15 @@ class Tokens extends React.Component {
     }
   }
 
-  handleSearch(e) {
-    const { value } = e.target;
-    this.setState({ searchText: value, currentPage: 1 });
-  }
-
   filterData(data) {
     return data.filter((item) => {
-      let coinName = item.metadata.name.toLowerCase();
+      const coinName = item.metadata.name.toLowerCase();
 
-      if (!this.state.searchText) {
+      if (!this.props.searchText) {
         return item;
       }
 
-      if (coinName.includes(this.state.searchText.toLowerCase())) {
+      if (coinName.includes(this.props.searchText.toLowerCase())) {
         return item;
       } else {
         return null;
@@ -490,35 +490,35 @@ class Tokens extends React.Component {
     });
   }
 
-  handlePage(page) {
-    this.setState({ currentPage: page });
-  }
-
   render() {
+    const { isDarkMode } = this.props;
+
     const columns = this.columns;
     const data = this.state.tokens;
     const dataFiltered = this.filterData(data);
 
-    const lastPageIndex = this.state.currentPage * rowsPerPage;
+    const lastPageIndex = this.props.currentPage * rowsPerPage;
     const firstPageIndex = lastPageIndex - rowsPerPage;
     const currentData = dataFiltered.slice(firstPageIndex, lastPageIndex);
 
     return (
       <div className={styles.root}>
-        <div className="mb-3">
-          Sort by
-          <div className="btn-group ml-2" role="group" aria-label="Sorted By">
+        <div className={styles.sortBlock}>
+          <span className={`padding-20-20-0-0 ${isDarkMode && 'color-white'}`}>{'Sort by'}</span>
+          <div className="btn-group" role="group" aria-label="Sorted By">
             <button
               type="button"
               className={`btn ${
                 this.state.sortedBy === SortedByLiquidity
-                  ? "btn-secondary background-color-grey"
-                  : "btn-outline-secondary"
+                  ? isDarkMode
+                    ? `${styles.darkModeButtonPrimary}`
+                    : 'btn-secondary background-color-black'
+                  : isDarkMode
+                    ? `${styles.darkModeButtonSecondary}`
+                    : 'btn'
               }`}
               onClick={() =>
-                this.setState({ sortedBy: SortedByLiquidity }, () =>
-                  this.updateTokens()
-                )
+                this.setState({ sortedBy: SortedByLiquidity }, () => this.updateTokens())
               }
             >
               Liquidity
@@ -528,13 +528,15 @@ class Tokens extends React.Component {
                 type="button"
                 className={`btn ${
                   this.state.sortedBy === SortedByYourTokens
-                    ? "btn-secondary background-color-grey"
-                    : "btn-outline-secondary"
+                    ? isDarkMode
+                      ? `${styles.darkModeButtonPrimary}`
+                      : 'btn-secondary background-color-black'
+                    : isDarkMode
+                      ? `${styles.darkModeButtonSecondary}`
+                      : 'btn'
                 }`}
                 onClick={() =>
-                  this.setState({ sortedBy: SortedByYourTokens }, () =>
-                    this.updateTokens()
-                  )
+                  this.setState({ sortedBy: SortedByYourTokens }, () => this.updateTokens())
                 }
               >
                 Your tokens
@@ -544,36 +546,29 @@ class Tokens extends React.Component {
               type="button"
               className={`btn ${
                 this.state.sortedBy === SortedByIndex
-                  ? "btn-secondary background-color-grey"
-                  : "btn-outline-secondary"
+                  ? isDarkMode
+                    ? `${styles.darkModeButtonPrimary}`
+                    : 'btn-secondary background-color-black'
+                  : isDarkMode
+                    ? `${styles.darkModeButtonSecondary}`
+                    : 'btn'
               }`}
-              onClick={() =>
-                this.setState({ sortedBy: SortedByIndex }, () =>
-                  this.updateTokens()
-                )
-              }
+              onClick={() => this.setState({ sortedBy: SortedByIndex }, () => this.updateTokens())}
             >
               Index
             </button>
           </div>
         </div>
-        <div className={styles.searchBlock}>
-          <SearchBar
-            type="text"
-            handleSearch={this.handleSearch}
-            value={this.state.searchText}
-            placeholder="Search"
-          />
-        </div>
-        <div className="tokens-table">
-          <Table columns={columns} data={currentData} />
+        <div className={styles.tokensTableBlock}>
+          <Table columns={columns} data={currentData} isDarkMode={isDarkMode} />
         </div>
         <div className={styles.paginationBlock}>
           <PaginationBox
-            handlePage={this.handlePage}
+            handlePage={this.props.handlePage}
             rowsPerPage={rowsPerPage}
             dataLength={dataFiltered.length}
-            currentPage={this.state.currentPage}
+            currentPage={this.props.currentPage}
+            isDarkMode={isDarkMode}
           />
         </div>
       </div>
@@ -581,4 +576,4 @@ class Tokens extends React.Component {
   }
 }
 
-export default React.memo(Tokens);
+export default React.memo(TokensSection);

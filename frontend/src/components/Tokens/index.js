@@ -1,3 +1,3 @@
-import Tokens from "./Tokens";
+import Tokens from './Tokens';
 
 export default Tokens;

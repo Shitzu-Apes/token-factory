@@ -95,7 +95,7 @@ export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: T
                         </a>
                       </td>
                       <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-                        {bnFormatter(token.total_supply.toString())}
+                        {bnFormatter(token.total_supply.toString(), token.metadata.decimals)}
                       </td>
                       <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                         <div className="font-medium text-gray-900">

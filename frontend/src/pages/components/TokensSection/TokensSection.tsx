@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 
-import { useNearWalletContext } from '../../../../lib/useNearWallet';
-import { useTokens } from '../../../../lib/useTokens';
-import Table from '../../../../components/Tokens/Table';
-import { toTokenAccountId } from '../../../../lib/constant';
-import PaginationBox from '../../../../components/elements/PaginationBox';
+import { useNearWalletContext } from '../../../lib/useNearWallet';
+import { useTokens } from '../../../lib/useTokens';
+import Table from '../../../components/Table';
+import { toTokenAccountId } from '../../../lib/constant';
+import PaginationBox from '../../../components/PaginationBox';
 import { FunnelIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
 
 const SortedByLiquidity = 'liquidity';

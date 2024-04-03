@@ -1,9 +1,9 @@
-import { ExplorerBaseUrl, toTokenAccountId } from '../../../lib/constant';
-import { addrsFormatter, bnFormatter, priceFormatter } from '../../../lib/formatter';
-import { TPool } from '../../../lib/useTokens';
-import { TokenArgs } from '../../../pages/Tokens/components/OptionsSection/OptionsSection';
+import { ExplorerBaseUrl, toTokenAccountId } from '../../lib/constant';
+import { addrsFormatter, bnFormatter, priceFormatter } from '../../lib/formatter';
+import { TPool } from '../../lib/useTokens';
+import { TokenArgs } from '../../pages/components/OptionsSection/OptionsSection';
 
-import DexScreenerLogo from '../../../assets/icons/DexScreener.png';
+import DexScreenerLogo from '../../assets/icons/DexScreener.png';
 
 export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: TPool }) {
   return (

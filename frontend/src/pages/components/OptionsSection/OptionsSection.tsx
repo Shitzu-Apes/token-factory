@@ -10,10 +10,10 @@ import {
   ValidTokenIdRe,
   BoatOfGas,
   OneNear
-} from '../../../../lib/constant';
-import { useNearWalletContext } from '../../../../lib/useNearWallet';
+} from '../../../lib/constant';
+import { useNearWalletContext } from '../../../lib/useNearWallet';
 import { useEffect, useState } from 'react';
-import { imageFileToBase64 } from '../../../../lib/imageFileToBase64';
+import { imageFileToBase64 } from '../../../lib/imageFileToBase64';
 
 type FungibleTokenMetadata = {
   spec: 'ft-1.0.0';

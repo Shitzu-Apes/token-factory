@@ -7,7 +7,7 @@ import {
   localStorageKeyCachedTokens,
   wNEAR
 } from './constant';
-import { TokenArgs } from '../pages/Tokens/components/OptionsSection/OptionsSection';
+import { TokenArgs } from '../pages/components/OptionsSection/OptionsSection';
 
 export type TPool = {
   [token_contract: string]: {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useNearWalletContext } from '../../../../lib/useNearWallet';
 import { useTokens } from '../../../../lib/useTokens';
@@ -45,15 +45,17 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
     setCurrentPage(page);
   };
 
-  const filteredAndSortedTokens = tokens
-    .filter((token) => {
-      if (!searchInput) return true;
-      return (
-        token.metadata.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-        token.metadata.symbol.toLowerCase().includes(searchInput.toLowerCase())
-      );
-    })
-    .slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+  const filteredAndSortedTokens = useMemo(
+    () =>
+      tokens.filter((token) => {
+        if (!searchInput) return true;
+        return (
+          token.metadata.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+          token.metadata.symbol.toLowerCase().includes(searchInput.toLowerCase())
+        );
+      }),
+    [tokens, searchInput, currentPage, sortedBy]
+  );
 
   return (
     <div className={''}>
@@ -124,7 +126,13 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
       </div>
 
       <div className="">
-        <Table tokens={filteredAndSortedTokens} pools={pools} />
+        <Table
+          tokens={filteredAndSortedTokens.slice(
+            (currentPage - 1) * rowsPerPage,
+            currentPage * rowsPerPage
+          )}
+          pools={pools}
+        />
       </div>
 
       <div className="pb-5">

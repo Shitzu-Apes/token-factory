@@ -8,6 +8,7 @@ import '@near-wallet-selector/modal-ui/styles.css';
 import { NearWalletContext, useNearWallet } from './lib/useNearWallet';
 import { ContractName } from './lib/constant';
 import TokensPage from './pages/Tokens/TokensPage';
+import Hero from './Hero';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = React.useState(false);
@@ -24,7 +25,7 @@ function App() {
   }, []);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex flex-col min-h-screen">
       <NearWalletContext.Provider value={nearWallet}>
         <AppProvider
           value={{
@@ -32,10 +33,7 @@ function App() {
             toggleDarkMode: () => setIsDarkMode(!isDarkMode)
           }}
         >
-          <div className="basis-[17%]">
-            <NavBar />
-          </div>
-          <div className="basis-[83%]">
+          <div className="w-full">
             <TopBar
               isDarkMode={isDarkMode}
               handleSearch={() => {}}
@@ -45,6 +43,7 @@ function App() {
               isConnected={nearWallet.isConnected()}
               requestSignOut={() => nearWallet.signOut()}
             />
+            <Hero />
             <TokensPage />
           </div>
         </AppProvider>

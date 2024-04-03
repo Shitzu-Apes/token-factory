@@ -10,7 +10,7 @@ import { FunnelIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid
 const SortedByLiquidity = 'liquidity';
 const SortedByLocked = 'lock';
 const SortedByIndex = 'index';
-const rowsPerPage = 50;
+const rowsPerPage = 30;
 
 function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
   const wallet = useNearWalletContext();

@@ -103,6 +103,14 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
           liquidity: bigint;
           fee: number;
           index: number;
+          locked: [
+            string,
+            {
+              amount: string;
+              duration_ns: string;
+              timestamp: string;
+            }
+          ][];
         };
       } = {};
 
@@ -114,10 +122,6 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
 
           const nearAmount = BigInt(pool.amounts[nearIdx]);
           const tokenAmount = BigInt(pool.amounts[1 - nearIdx]);
-
-          if (token_contract === 'intel.tkn.near') {
-            console.log({ nearAmount, tokenAmount });
-          }
 
           if (nearAmount === BigInt(0) || tokenAmount === BigInt(0)) return;
 
@@ -132,10 +136,34 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
             price,
             liquidity,
             fee,
-            index: i
+            index: i,
+            locked: []
           };
         }
       });
+
+      const lockedPromises = [];
+      for (let [tkn, pool] of Object.entries(pools)) {
+        lockedPromises.push(
+          wallet
+            .viewMethod({
+              contractId: `${pool.index}.lock-lp.near`,
+              method: 'get_lockups',
+              args: { skip: '0', take: '100' }
+            })
+            .then((locked) => {
+              console.log(locked);
+              pools[tkn] = {
+                ...pool,
+                locked
+              };
+            })
+            .catch(() => {
+              return;
+            })
+        );
+      }
+      await Promise.all(lockedPromises);
 
       setPools(pools);
     })();

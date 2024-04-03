@@ -83,7 +83,6 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
   const viewMethod = useCallback(
     async ({ contractId, method, args = {} }: ViewMethodParams) => {
       if (!provider) throw new Error('Provider not initialized');
-      console.log({ args, args_base64: Buffer.from(JSON.stringify(args)).toString('base64') });
       const res: any = await provider.query({
         request_type: 'call_function',
         account_id: contractId,

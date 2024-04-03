@@ -2,17 +2,13 @@ import { UploadResizeHeight, UploadResizeWidth } from './constant';
 
 export function imageFileToBase64(imageFile: File): Promise<string> {
   return new Promise(async (resolve, reject) => {
-    console.log('imageFileToBase64');
     const reader = new FileReader();
     const image = new Image();
     reader.onload = (e) => {
-      console.log('reader.onload');
-      console.log({ src: (e.target as any).result });
       image.src = (e.target as any).result as string;
     };
 
     image.onload = () => {
-      console.log('image.onload');
       const canvas = document.createElement('canvas');
       const aspect = image.naturalWidth / image.naturalHeight;
       const width = Math.round(UploadResizeWidth * Math.max(1, aspect));

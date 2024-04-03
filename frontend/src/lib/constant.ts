@@ -1,3 +1,8 @@
+import ParasLogo from '../assets/icons/Paras.png';
+import MintBaseLogo from '../assets/icons/MintBase.png';
+import MitteLogo from '../assets/icons/Mitte.jpg';
+import TradeportLogo from '../assets/icons/Tradeport.png';
+
 export const UploadResizeWidth = 96;
 export const UploadResizeHeight = 96;
 
@@ -27,3 +32,26 @@ export const toTokenAccountId = (tokenId: string) => `${tokenId.toLowerCase()}.$
 export const localStorageKeyCachedTokens = 'tkn.near:v02:cachedTokens';
 export const NFT_BASE_URL =
   'https://bafybeifqejvrnlzraceyapuzne6d2cl2s5bolosrufpwp3lw22pqfcafo4.ipfs.nftstorage.link';
+
+export const NFT_LINKS = [
+  {
+    platform: 'Paras',
+    logo: ParasLogo,
+    link: 'https://paras.id/collection/shitzu.bodega-lab.near'
+  },
+  {
+    platform: 'MintBase',
+    logo: MintBaseLogo,
+    link: 'https://www.mintbase.xyz/contract/shitzu.bodega-lab.near/nfts/all/0'
+  },
+  {
+    platform: 'Mitte',
+    logo: MitteLogo,
+    link: 'https://mitte.gg/?contractAddress=shitzu.bodega-lab.near'
+  },
+  {
+    platform: 'Tradeport',
+    logo: TradeportLogo,
+    link: 'https://tradeport.xyz/near/collection/shitzu.bodega-lab.near'
+  }
+];

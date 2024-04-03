@@ -9,7 +9,7 @@ import {
 } from './constant';
 import { TokenArgs } from '../pages/Tokens/components/OptionsSection/OptionsSection';
 
-type TPool = {
+export type TPool = {
   [token_contract: string]: {
     price: number;
     liquidity: bigint;
@@ -20,6 +20,10 @@ type TPool = {
 
 export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
   const [tokens, setTokens] = useState<TokenArgs[]>([]);
+
+  const [tokenIdx, setTokenIdx] = useState<{
+    [token: string]: number;
+  }>({});
   const [pools, setPools] = useState<TPool>({});
 
   useEffect(() => {
@@ -48,6 +52,12 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
       }
 
       const tokens = [...cachedTokens, ...(await Promise.all(getTokensPromises)).flat()];
+
+      const tokenIdx: { [token: string]: number } = {};
+      for (let i = 0; i < tokens.length; i++) {
+        tokenIdx[tokens[i].metadata.symbol] = i;
+      }
+      setTokenIdx(tokenIdx);
 
       if (tokens.length > cachedTokens.length) {
         window.localStorage.setItem(localStorageKeyCachedTokens, JSON.stringify(tokens));
@@ -131,5 +141,5 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
     })();
   }, [tokens]);
 
-  return { tokens, pools };
+  return { tokens, pools, tokenIdx };
 }

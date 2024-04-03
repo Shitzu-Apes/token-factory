@@ -7,6 +7,8 @@ import { useState } from 'react';
 // import styles from './TokensSection.module.css';
 import { useNearWalletContext } from '../../../../lib/useNearWallet';
 import { useTokens } from '../../../../lib/useTokens';
+import Table from '../../../../components/Tokens/Table';
+import { toTokenAccountId } from '../../../../lib/constant';
 
 const SortedByLiquidity = 'liquidity';
 const SortedByYourTokens = 'your';
@@ -19,7 +21,27 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
   const wallet = useNearWalletContext();
   const [sortedBy, setSortedBy] = useState(SortedByLiquidity);
 
-  const { tokens, pools } = useTokens(wallet);
+  const { tokens, pools, tokenIdx } = useTokens(wallet);
+
+  tokens.sort((a, b) => {
+    if (sortedBy === SortedByLiquidity) {
+      const tokenALiquidity =
+        toTokenAccountId(a.metadata.symbol) in pools
+          ? pools[toTokenAccountId(a.metadata.symbol)].liquidity
+          : BigInt(0);
+      const tokenBLiquidity =
+        toTokenAccountId(b.metadata.symbol) in pools
+          ? pools[toTokenAccountId(b.metadata.symbol)].liquidity
+          : BigInt(0);
+      return Number(tokenBLiquidity - tokenALiquidity);
+    }
+
+    if (sortedBy === SortedByIndex) {
+      return tokenIdx[a.metadata.symbol] - tokenIdx[b.metadata.symbol];
+    }
+
+    return 0;
+  });
 
   return (
     <div className={''}>
@@ -58,6 +80,9 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
             Index
           </button>
         </div>
+      </div>
+      <div className="max-h-screen overflow-y-auto">
+        <Table tokens={tokens.slice(0, 50)} pools={pools} />
       </div>
       {/* <div className={''}>
         <Table columns={columns} data={currentData} isDarkMode={isDarkMode} />

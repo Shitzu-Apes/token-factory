@@ -47,15 +47,16 @@ function TokensPage({}) {
           >
             <div>
               <TokensSection
-              // contract={contract}
-              // lsKey={lsKey}
-              // handlePage={handlePage}
-              // currentPage={currentPage}
-              // lsKeyCachedTokens={lsKeyCachedTokens}
-              // accountId={accountId}
-              // isSignedIn={signedIn}
-              // searchText={searchText}
-              // isDarkMode={isDarkMode}
+                isDarkMode={isDarkMode}
+                // contract={contract}
+                // lsKey={lsKey}
+                // handlePage={handlePage}
+                // currentPage={currentPage}
+                // lsKeyCachedTokens={lsKeyCachedTokens}
+                // accountId={accountId}
+                // isSignedIn={signedIn}
+                // searchText={searchText}
+                // isDarkMode={isDarkMode}
               />
             </div>
           </div>

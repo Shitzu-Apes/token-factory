@@ -1,6 +1,5 @@
 import { useDropzone } from 'react-dropzone';
 import Button from '../../../../components/elements/Button';
-import { BoatOfGas, OneNear } from '../../../../components/Tokens/Tokens';
 import {
   ContractName,
   MaxAccountIdLen,
@@ -9,7 +8,9 @@ import {
   NO_DEPOSIT,
   THIRTY_TGAS,
   ValidAccountRe,
-  ValidTokenIdRe
+  ValidTokenIdRe,
+  BoatOfGas,
+  OneNear
 } from '../../../../lib/constant';
 import { useNearWalletContext } from '../../../../lib/useNearWallet';
 import { useEffect, useState } from 'react';
@@ -23,7 +24,7 @@ type FungibleTokenMetadata = {
   decimals: number;
 };
 
-type TokenArgs = {
+export type TokenArgs = {
   owner_id: string;
   total_supply: string;
   metadata: FungibleTokenMetadata;

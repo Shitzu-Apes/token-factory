@@ -152,6 +152,7 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
 
   return {
     wallet,
+    provider,
     accountId,
     isConnected,
     signIn,

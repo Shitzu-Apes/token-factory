@@ -15,7 +15,7 @@ export default function TopBar({
 
   return (
     <div className={`flex px-2 py-2`}>
-      <h2 className="ml-2 text-lg">TOKEN FARM by SHITZU</h2>
+      <h2 className="ml-2 text-lg dark:text-white">TOKEN FARM by SHITZU</h2>
       <div className="ml-auto pr-5">
         {isConnected ? (
           <div className="flex items-center">
@@ -27,11 +27,11 @@ export default function TopBar({
               )}
             </div>
             <div className="ml-3">
-              <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900">
                 {wallet.accountId}
               </p>
               <div
-                className="cursour-pointer text-xs font-medium text-gray-500 group-hover:text-gray-700"
+                className="cursour-pointer text-xs font-medium text-gray-500 dark:text-gray-100 group-hover:text-gray-700"
                 onClick={requestSignOut}
               >
                 Log Out
@@ -41,7 +41,7 @@ export default function TopBar({
         ) : (
           <button
             type="button"
-            className="cursor-pointer rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="cursor-pointer rounded-md bg-primary-dark px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             onClick={requestSignIn}
           >
             Connect

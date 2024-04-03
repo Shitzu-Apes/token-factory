@@ -81,13 +81,16 @@ function TokensSection() {
         <div className="flex w-[400px]">
           <div className="relative w-full flex">
             <div className="bg-primary-dark flex justify-center items-center h-10 w-10 rounded-l-lg">
-              <MagnifyingGlassCircleIcon className="h-8 w-8 text-white" aria-hidden="true" />
+              <MagnifyingGlassCircleIcon
+                className="h-8 w-8 text-gray-100 dark:text-gray-800"
+                aria-hidden="true"
+              />
             </div>
             <input
               type="text"
               name="account-number"
               id="account-number"
-              className="block w-full rounded-r-lg pl-3 border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
+              className="block w-full rounded-r-lg pl-3 border-0 text-gray-900 dark:text-white ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6 dark:bg-gray-800"
               placeholder="Token name or symbol"
               onInput={(e) => {
                 setSearchInput(e.currentTarget.value);
@@ -100,17 +103,20 @@ function TokensSection() {
             <div>
               <div className="sm:block">
                 <nav
-                  className="isolate flex divide-x divide-gray-200 min-w-[400px] w-full"
+                  className="isolate flex divide-x divide-gray-200 dark:divide-gray-600 min-w-[400px] w-full"
                   aria-label="Tabs"
                 >
                   <div className="bg-primary-dark flex items-center justify-center h-10 w-10 rounded-l-lg">
-                    <FunnelIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                    <FunnelIcon
+                      className="h-6 w-6 text-gray-100 dark:text-gray-900"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div
                     className={`
-                    ${sortedBy === SortedByLiquidity ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}
+                    ${sortedBy === SortedByLiquidity ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700'}
                     border border-primary-dark cursor-pointer
-                    w-[33%] group relative min-w-0 flex-1 overflow-hidden bg-white py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
+                    w-[33%] group relative min-w-0 flex-1 overflow-hidden py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
                     onClick={() => setSortedBy(SortedByLiquidity)}
                   >
                     <span>Liquidity</span>
@@ -118,14 +124,14 @@ function TokensSection() {
                       aria-hidden="true"
                       className={`
                       ${sortedBy === SortedByLiquidity ? 'bg-primary-dark' : 'bg-transparent'}
-                      absolute inset-x-0 bottom-0 h-0.5`}
+                      absolute inset-x-0 bottom-0 h-1`}
                     />
                   </div>
                   <div
                     className={`
-                    ${sortedBy === SortedByLocked ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}
+                    ${sortedBy === SortedByLocked ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700'}
                     border border-primary-dark cursor-pointer
-                    w-[33%] group relative min-w-0 flex-1 overflow-hidden bg-white py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
+                    w-[33%] group relative min-w-0 flex-1 overflow-hidden py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
                     onClick={() => setSortedBy(SortedByLocked)}
                   >
                     <span>Locked</span>
@@ -133,14 +139,14 @@ function TokensSection() {
                       aria-hidden="true"
                       className={`
                       ${sortedBy === SortedByLocked ? 'bg-primary-dark' : 'bg-transparent'}
-                      absolute inset-x-0 bottom-0 h-0.5`}
+                      absolute inset-x-0 bottom-0 h-1`}
                     />
                   </div>
                   <div
                     className={`
-                    ${sortedBy === SortedByIndex ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}
+                    ${sortedBy === SortedByIndex ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700'}
                     border border-primary-dark cursor-pointer
-                    w-[33%]  rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
+                    w-[33%] rounded-r-lg group relative min-w-0 flex-1 overflow-hidden py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
                     onClick={() => setSortedBy(SortedByIndex)}
                   >
                     <span>Index</span>
@@ -148,7 +154,7 @@ function TokensSection() {
                       aria-hidden="true"
                       className={`
                       ${sortedBy === SortedByIndex ? 'bg-primary-dark' : 'bg-transparent'}
-                      absolute inset-x-0 bottom-0 h-0.5`}
+                      absolute inset-x-0 bottom-0 h-1`}
                     />
                   </div>
                 </nav>

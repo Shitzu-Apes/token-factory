@@ -1,5 +1,4 @@
 import { useDropzone } from 'react-dropzone';
-import Button from '../../../../components/elements/Button';
 import {
   ContractName,
   MaxAccountIdLen,

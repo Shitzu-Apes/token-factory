@@ -1,5 +1,3 @@
-import React, { useEffect } from 'react';
-
 import TopBar from './components/TopBar';
 
 import '@near-wallet-selector/modal-ui/styles.css';
@@ -12,7 +10,7 @@ function App() {
   const nearWallet = useNearWallet({ createAccessKeyFor: ContractName, network: 'mainnet' });
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen dark:bg-gray-900">
       <NearWalletContext.Provider value={nearWallet}>
         <div className="w-full">
           <TopBar

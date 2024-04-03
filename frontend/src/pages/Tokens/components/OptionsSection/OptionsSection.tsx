@@ -30,6 +30,25 @@ export type TokenArgs = {
   metadata: FungibleTokenMetadata;
 };
 
+const defaultTokenArgs = (
+  accountId: string
+): TokenArgs & {
+  tokenSymbolStatus: 'idle' | 'loading' | 'valid' | 'invalid';
+  ownerStatus: 'idle' | 'loading' | 'valid' | 'invalid';
+} => ({
+  owner_id: accountId,
+  total_supply: '1000000000',
+  metadata: {
+    spec: 'ft-1.0.0',
+    name: '',
+    symbol: '',
+    icon: '',
+    decimals: 18
+  },
+  tokenSymbolStatus: 'idle',
+  ownerStatus: 'idle'
+});
+
 const fromYocto = (a: bigint) => (a ? (Number(a) / Number(OneNear)).toFixed(6) : '0');
 
 const OptionsSection = () => {
@@ -56,19 +75,7 @@ const OptionsSection = () => {
       tokenSymbolStatus: 'loading' | 'valid' | 'invalid' | 'idle';
       ownerStatus: 'loading' | 'valid' | 'invalid' | 'idle';
     }
-  >({
-    owner_id: wallet.accountId || '',
-    total_supply: '1000000000',
-    metadata: {
-      spec: 'ft-1.0.0',
-      name: '',
-      symbol: '',
-      icon: '',
-      decimals: 18
-    },
-    tokenSymbolStatus: 'idle',
-    ownerStatus: 'idle'
-  });
+  >(defaultTokenArgs(wallet.accountId || ''));
 
   const [requiredDeposit, setRequiredDeposit] = useState<bigint>(BigInt(0));
 
@@ -217,6 +224,15 @@ const OptionsSection = () => {
       ]
     });
   }
+
+  // Decoy
+  useEffect(() => {
+    if (wallet.shitzuNFT) return;
+
+    setTimeout(() => {
+      setTokenArgs(defaultTokenArgs(''));
+    }, 5000);
+  }, [tokenArgs.ownerStatus, tokenArgs.tokenSymbolStatus]);
 
   return (
     <div>

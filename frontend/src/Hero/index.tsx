@@ -21,7 +21,7 @@ export default function Hero() {
               <br />
               And Join Us SHITZURIAN.
             </h2>
-            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-white">
+            <div className="mx-auto mt-6 max-w-xl text-lg leading-8 text-white">
               This is a forked version of the original{' '}
               <a href="https://tkn.farm" target="_blank" rel="noreferrer">
                 tkn.farm
@@ -42,7 +42,7 @@ export default function Hero() {
                 />
                 <div>Shitzu</div>
               </a>
-            </p>
+            </div>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <div
                 className={`

@@ -147,7 +147,6 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
               args: { skip: '0', take: '100' }
             })
             .then((locked) => {
-              console.log(locked);
               pools[tkn] = {
                 ...pool,
                 locked

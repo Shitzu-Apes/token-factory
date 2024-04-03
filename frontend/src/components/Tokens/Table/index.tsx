@@ -42,6 +42,12 @@ export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: T
                   >
                     Price
                   </th>
+                  <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                  >
+                    Lock
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
@@ -109,6 +115,15 @@ export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: T
                         >
                           Buy on Ref
                         </a>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
+                        {pool
+                          ? (
+                              (pool.locked.reduce((acc, lock) => acc + Number(lock[1].amount), 0) /
+                                Number(pool.shares_total_supply)) *
+                              100
+                            ).toFixed(2) + '%'
+                          : '0%'}
                       </td>
                     </tr>
                   );

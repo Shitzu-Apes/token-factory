@@ -15,6 +15,15 @@ export type TPool = {
     liquidity: bigint;
     fee: number;
     index: number;
+    shares_total_supply: string;
+    locked: [
+      string,
+      {
+        amount: string;
+        duration_ns: string;
+        timestamp: string;
+      }
+    ][];
   };
 };
 
@@ -97,22 +106,7 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
         shares_total_supply: string;
       }[] = (await Promise.all(promises)).flat();
 
-      const pools: {
-        [token_contract: string]: {
-          price: number;
-          liquidity: bigint;
-          fee: number;
-          index: number;
-          locked: [
-            string,
-            {
-              amount: string;
-              duration_ns: string;
-              timestamp: string;
-            }
-          ][];
-        };
-      } = {};
+      const pools: TPool = {};
 
       rawPools.forEach((pool, i) => {
         if (pool.pool_kind === SimplePool) {
@@ -136,6 +130,7 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
             price,
             liquidity,
             fee,
+            shares_total_supply: pool.shares_total_supply,
             index: i,
             locked: []
           };

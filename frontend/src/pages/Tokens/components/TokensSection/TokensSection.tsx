@@ -8,7 +8,7 @@ import PaginationBox from '../../../../components/elements/PaginationBox';
 import { FunnelIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
 
 const SortedByLiquidity = 'liquidity';
-const SortedByYourTokens = 'your';
+const SortedByLocked = 'lock';
 const SortedByIndex = 'index';
 const rowsPerPage = 50;
 
@@ -34,6 +34,24 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
 
     if (sortedBy === SortedByIndex) {
       return tokenIdx[a.metadata.symbol] - tokenIdx[b.metadata.symbol];
+    }
+
+    if (sortedBy === SortedByLocked) {
+      const tokenALocked =
+        toTokenAccountId(a.metadata.symbol) in pools
+          ? pools[toTokenAccountId(a.metadata.symbol)].locked.reduce(
+              (acc, [_, { amount }]) => acc + Number(amount),
+              0
+            ) / Number(pools[toTokenAccountId(a.metadata.symbol)].shares_total_supply)
+          : 0;
+      const tokenBLocked =
+        toTokenAccountId(b.metadata.symbol) in pools
+          ? pools[toTokenAccountId(b.metadata.symbol)].locked.reduce(
+              (acc, [_, { amount }]) => acc + Number(amount),
+              0
+            ) / Number(pools[toTokenAccountId(b.metadata.symbol)].shares_total_supply)
+          : 0;
+      return Number(tokenBLocked - tokenALocked);
     }
 
     return 0;
@@ -92,7 +110,7 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
                     className={`
                     ${sortedBy === SortedByLiquidity ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}
                     border border-primary-dark cursor-pointer
-                    w-[50%] group relative min-w-0 flex-1 overflow-hidden bg-white py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
+                    w-[33%] group relative min-w-0 flex-1 overflow-hidden bg-white py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
                     onClick={() => setSortedBy(SortedByLiquidity)}
                   >
                     <span>Liquidity</span>
@@ -105,9 +123,24 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
                   </div>
                   <div
                     className={`
+                    ${sortedBy === SortedByLocked ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}
+                    border border-primary-dark cursor-pointer
+                    w-[33%] group relative min-w-0 flex-1 overflow-hidden bg-white py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
+                    onClick={() => setSortedBy(SortedByLocked)}
+                  >
+                    <span>Locked</span>
+                    <span
+                      aria-hidden="true"
+                      className={`
+                      ${sortedBy === SortedByLocked ? 'bg-primary-dark' : 'bg-transparent'}
+                      absolute inset-x-0 bottom-0 h-0.5`}
+                    />
+                  </div>
+                  <div
+                    className={`
                     ${sortedBy === SortedByIndex ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}
                     border border-primary-dark cursor-pointer
-                    w-[50%]  rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
+                    w-[33%]  rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
                     onClick={() => setSortedBy(SortedByIndex)}
                   >
                     <span>Index</span>

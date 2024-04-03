@@ -2,18 +2,20 @@
   "name": "frontend",
   "version": "0.1.0",
   "homepage": "",
-  "packageManager": "yarn@1.22.21",
-  "engines": {
-    "node": ">=18"
-  },
+  "type": "module",
   "private": true,
   "dependencies": {
+    "@near-wallet-selector/core": "^8.9.5",
+    "@near-wallet-selector/here-wallet": "^8.9.5",
+    "@near-wallet-selector/meteor-wallet": "^8.9.5",
+    "@near-wallet-selector/modal-ui": "^8.9.5",
+    "@near-wallet-selector/my-near-wallet": "^8.9.5",
     "big.js": "^6.0.3",
     "lodash": "^4.17.21",
     "near-api-js": "^3.0.4",
-    "react": "^16.13.1",
-    "react-bootstrap": "^1.0.0",
-    "react-dom": "^16.13.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-files": "^2.4.8",
     "react-table": "^7.0.4"
   },
@@ -27,8 +29,9 @@
     "deploy": "yarn build && gh-pages -d build"
   },
   "devDependencies": {
-    "@types/react": "^16",
-    "@types/react-dom": "^16",
+    "@types/node": "^20.12.2",
+    "@types/react": "^18.2.64",
+    "@types/react-dom": "^18.2.21",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
     "@typescript-eslint/parser": "^7.4.0",
     "@vitejs/plugin-react": "^4.2.1",

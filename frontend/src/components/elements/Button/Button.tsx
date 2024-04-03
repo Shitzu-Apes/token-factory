@@ -1,8 +1,7 @@
-import React from 'react';
-import styles from './Button.module.css';
+// import styles from './Button.module.css';
 
 const Button = ({
-  className = null,
+  className,
   onClick = () => {},
   text = '',
   backgroundColor = '#262626',
@@ -10,10 +9,19 @@ const Button = ({
   disabled = false,
   width,
   height
+}: {
+  className?: string;
+  onClick?: () => void;
+  text?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  disabled?: boolean;
+  width?: number;
+  height?: number;
 }) => {
   return (
     <button
-      className={`${className} ${styles.root}`}
+      className={`${className}`}
       onClick={onClick}
       style={{ backgroundColor: backgroundColor, color: textColor, width: width, height: height }}
       disabled={disabled}

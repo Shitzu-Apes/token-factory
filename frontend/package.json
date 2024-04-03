@@ -5,6 +5,7 @@
   "type": "module",
   "private": true,
   "dependencies": {
+    "@heroicons/react": "^2.1.3",
     "@near-wallet-selector/core": "^8.9.5",
     "@near-wallet-selector/here-wallet": "^8.9.5",
     "@near-wallet-selector/meteor-wallet": "^8.9.5",

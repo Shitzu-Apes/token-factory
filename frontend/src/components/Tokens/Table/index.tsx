@@ -56,9 +56,6 @@ export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: T
                   >
                     Price
                   </th>
-                  <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                    <span className="sr-only">Buy</span>
-                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
@@ -100,13 +97,16 @@ export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: T
                         <div className="font-medium text-gray-900">
                           {pool ? `Ⓝ ${bnFormatter(pool.liquidity.toString())}` : 'Not Found'}
                         </div>
-                        <a
-                          href={`https://dexscreener.com/near/refv1-${pool.index}`}
-                          target="_blank"
-                          className="mt-1 text-gray-500"
-                        >
-                          DEXSCREENER
-                        </a>
+
+                        {pool && (
+                          <a
+                            href={`https://dexscreener.com/near/refv1-${pool.index}`}
+                            target="_blank"
+                            className="mt-1 text-gray-500"
+                          >
+                            DEXSCREENER
+                          </a>
+                        )}
                       </td>
                       <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
                         <div className="font-medium text-gray-900">
@@ -120,7 +120,6 @@ export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: T
                           Buy on Ref
                         </a>
                       </td>
-                      <td className="relative whitespace-nowrap py-3 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"></td>
                     </tr>
                   );
                 })}

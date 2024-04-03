@@ -9,6 +9,7 @@ import { useNearWalletContext } from '../../../../lib/useNearWallet';
 import { useTokens } from '../../../../lib/useTokens';
 import Table from '../../../../components/Tokens/Table';
 import { toTokenAccountId } from '../../../../lib/constant';
+import PaginationBox from '../../../../components/elements/PaginationBox';
 
 const SortedByLiquidity = 'liquidity';
 const SortedByYourTokens = 'your';
@@ -81,8 +82,11 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
           </button>
         </div>
       </div>
-      <div className="max-h-screen overflow-y-auto">
+      <div className="">
         <Table tokens={tokens.slice(0, 50)} pools={pools} />
+      </div>
+      <div>
+        <PaginationBox />
       </div>
       {/* <div className={''}>
         <Table columns={columns} data={currentData} isDarkMode={isDarkMode} />

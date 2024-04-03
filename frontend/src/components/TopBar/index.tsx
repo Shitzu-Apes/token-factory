@@ -50,7 +50,7 @@ export default function TopBar({
   }, [wallet.accountId, wallet.provider]);
 
   return (
-    <div className={`flex px-2 py-2 ${isDarkMode && 'background-color-black'}`}>
+    <div className={`flex px-2 py-2`}>
       <div className="ml-auto pr-5">
         {isConnected ? (
           <div className="flex items-center">

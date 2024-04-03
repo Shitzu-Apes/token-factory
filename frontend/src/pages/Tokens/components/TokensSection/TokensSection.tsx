@@ -5,7 +5,7 @@ import { useTokens } from '../../../../lib/useTokens';
 import Table from '../../../../components/Tokens/Table';
 import { toTokenAccountId } from '../../../../lib/constant';
 import PaginationBox from '../../../../components/elements/PaginationBox';
-import { MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
+import { FunnelIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
 
 const SortedByLiquidity = 'liquidity';
 const SortedByYourTokens = 'your';
@@ -57,64 +57,76 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
 
   return (
     <div className={''}>
-      <div className={''}>
-        <span className={`padding-20-20-0-0 ${isDarkMode && 'color-white'}`}>{'Sort by'}</span>
-        <div className="btn-group" role="group" aria-label="Sorted By">
-          <button
-            type="button"
-            className={`btn ${
-              sortedBy === SortedByLiquidity ? 'btn-secondary background-color-black' : 'btn'
-            }`}
-            onClick={() => setSortedBy(SortedByLiquidity)}
-          >
-            Liquidity
-          </button>
-          {wallet.accountId && (
-            <button
-              type="button"
-              className={`btn ${
-                sortedBy === SortedByYourTokens ? 'btn-secondary background-color-black' : 'btn'
-              }`}
-              onClick={() => setSortedBy(SortedByYourTokens)}
-            >
-              Your tokens
-            </button>
-          )}
-          <button
-            type="button"
-            className={`btn ${
-              sortedBy === SortedByIndex ? 'btn-secondary background-color-black' : 'btn'
-            }`}
-            onClick={() => {
-              setSortedBy(SortedByIndex);
-            }}
-          >
-            Index
-          </button>
-        </div>
-      </div>
-      <div>
-        <div>
-          <div className="relative mt-2 px-2 rounded-md shadow-sm">
+      <div className="flex justify-between items-center px-6 lg:px-8 pt-4">
+        <div className="flex w-[400px]">
+          <div className="relative w-full flex">
+            <div className="bg-primary-dark flex justify-center items-center h-10 w-10 rounded-l-lg">
+              <MagnifyingGlassCircleIcon className="h-8 w-8 text-white" aria-hidden="true" />
+            </div>
             <input
               type="text"
               name="account-number"
               id="account-number"
-              className="block w-full rounded-md border-0 py-2.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full rounded-r-lg pl-3 border-0 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
               placeholder="Token name or symbol"
               onInput={(e) => {
                 setSearchInput(e.currentTarget.value);
               }}
             />
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-              <MagnifyingGlassCircleIcon className="h-10 w-10 text-gray-400" aria-hidden="true" />
+          </div>
+        </div>
+        <div className={'flex flex-1 items-center justify-center'}>
+          <div className="ml-auto">
+            <div>
+              <div className="sm:block">
+                <nav
+                  className="isolate flex divide-x divide-gray-200 min-w-[400px] w-full"
+                  aria-label="Tabs"
+                >
+                  <div className="bg-primary-dark flex items-center justify-center h-10 w-10 rounded-l-lg">
+                    <FunnelIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                  </div>
+                  <div
+                    className={`
+                    ${sortedBy === SortedByLiquidity ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}
+                    border border-primary-dark cursor-pointer
+                    w-[50%] group relative min-w-0 flex-1 overflow-hidden bg-white py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
+                    onClick={() => setSortedBy(SortedByLiquidity)}
+                  >
+                    <span>Liquidity</span>
+                    <span
+                      aria-hidden="true"
+                      className={`
+                      ${sortedBy === SortedByLiquidity ? 'bg-primary-dark' : 'bg-transparent'}
+                      absolute inset-x-0 bottom-0 h-0.5`}
+                    />
+                  </div>
+                  <div
+                    className={`
+                    ${sortedBy === SortedByIndex ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'}
+                    border border-primary-dark cursor-pointer
+                    w-[50%]  rounded-r-lg group relative min-w-0 flex-1 overflow-hidden bg-white py-2 px-4 text-center text-sm font-medium hover:bg-gray-50 focus:z-10`}
+                    onClick={() => setSortedBy(SortedByIndex)}
+                  >
+                    <span>Index</span>
+                    <span
+                      aria-hidden="true"
+                      className={`
+                      ${sortedBy === SortedByIndex ? 'bg-primary-dark' : 'bg-transparent'}
+                      absolute inset-x-0 bottom-0 h-0.5`}
+                    />
+                  </div>
+                </nav>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
       <div className="">
         <Table tokens={filteredAndSortedTokens} pools={pools} />
       </div>
+
       <div className="pb-5">
         <PaginationBox
           currentPage={currentPage}

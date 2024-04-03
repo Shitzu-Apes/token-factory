@@ -28,7 +28,7 @@ function TokensPage({}) {
     <AppConsumer>
       {({ isDarkMode }) => (
         <div>
-          {wallet.isConnected() && (
+          {/* {wallet.isConnected() && (
             <div
               className="px-2 py-4"
               style={{
@@ -36,9 +36,9 @@ function TokensPage({}) {
                 color: isDarkMode ? '#ffffff' : undefined
               }}
             >
-              {/* <OptionsSection /> */}
+              <OptionsSection />
             </div>
-          )}
+          )} */}
           <div>
             <div>
               <TokensSection isDarkMode={isDarkMode} />

@@ -7,7 +7,7 @@ import { SignMessageMethod, Wallet } from '@near-wallet-selector/core/src/lib/wa
 import { setupMyNearWallet } from '@near-wallet-selector/my-near-wallet';
 import { setupHereWallet } from '@near-wallet-selector/here-wallet';
 import { setupMeteorWallet } from '@near-wallet-selector/meteor-wallet';
-import { NO_DEPOSIT, THIRTY_TGAS } from './constant';
+import { NFT_BASE_URL, NO_DEPOSIT, THIRTY_TGAS } from './constant';
 
 interface UseNearWalletProps {
   createAccessKeyFor: string;
@@ -149,7 +149,40 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
     [provider]
   );
 
+  const [shitzuNFT, setShitzuNFT] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      if (!accountId || !provider) {
+        return;
+      }
+
+      const [shitzuNftId]: {
+        token_id: string;
+        owner_id: string;
+        metadata: {
+          title: string;
+          description: string;
+          media: string;
+        };
+      }[] = await viewMethod({
+        contractId: 'shitzu.bodega-lab.near',
+        method: 'nft_tokens_for_owner',
+        args: {
+          account_id: accountId,
+          from_index: '0',
+          limit: 1
+        }
+      });
+
+      if (shitzuNftId) {
+        setShitzuNFT(`${NFT_BASE_URL}/${shitzuNftId.metadata.media}`);
+      }
+    })();
+  }, [accountId, provider]);
+
   return {
+    shitzuNFT,
     wallet,
     provider,
     accountId,

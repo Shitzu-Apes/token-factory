@@ -1,8 +1,4 @@
-import { useEffect, useState } from 'react';
-import { Colors } from '../../assets/colors/colors';
 import { useNearWalletContext } from '../../lib/useNearWallet';
-import Button from '../elements/Button';
-import { NFT_BASE_URL } from '../../lib/constant';
 import { UserIcon } from '@heroicons/react/20/solid';
 
 export default function TopBar({
@@ -19,44 +15,15 @@ export default function TopBar({
 }) {
   const wallet = useNearWalletContext();
 
-  const [shitzuNftMedia, setShitzuNftMedia] = useState<string | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      if (!wallet.accountId || !wallet.provider) {
-        return;
-      }
-
-      const [shitzuNftId]: {
-        token_id: string;
-        owner_id: string;
-        metadata: {
-          title: string;
-          description: string;
-          media: string;
-        };
-      }[] = await wallet.viewMethod({
-        contractId: 'shitzu.bodega-lab.near',
-        method: 'nft_tokens_for_owner',
-        args: {
-          account_id: wallet.accountId,
-          from_index: '0',
-          limit: 1
-        }
-      });
-
-      setShitzuNftMedia(`${NFT_BASE_URL}/${shitzuNftId.metadata.media}`);
-    })();
-  }, [wallet.accountId, wallet.provider]);
-
   return (
     <div className={`flex px-2 py-2`}>
+      <h2 className="ml-2 text-lg">TOKEN FARM by SHITZU</h2>
       <div className="ml-auto pr-5">
         {isConnected ? (
           <div className="flex items-center">
             <div>
-              {shitzuNftMedia ? (
-                <img className="inline-block h-9 w-9 rounded-full" src={shitzuNftMedia} alt="" />
+              {wallet.shitzuNFT ? (
+                <img className="inline-block h-9 w-9 rounded-full" src={wallet.shitzuNFT} alt="" />
               ) : (
                 <UserIcon className="h-9 w-9 rounded-full" />
               )}

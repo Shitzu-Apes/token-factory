@@ -4,12 +4,10 @@ import { UserIcon } from '@heroicons/react/20/solid';
 export default function TopBar({
   requestSignIn,
   isConnected,
-  requestSignOut,
-  isDarkMode
+  requestSignOut
 }: {
   handleSearch: (e: React.ChangeEvent<HTMLInputElement>) => void;
   requestSignIn: () => void;
-  isDarkMode: boolean;
   isConnected: boolean;
   requestSignOut: () => void;
 }) {

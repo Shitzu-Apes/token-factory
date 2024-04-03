@@ -12,7 +12,7 @@ const SortedByLocked = 'lock';
 const SortedByIndex = 'index';
 const rowsPerPage = 30;
 
-function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
+function TokensSection() {
   const wallet = useNearWalletContext();
   const [sortedBy, setSortedBy] = useState(SortedByLiquidity);
   const [searchInput, setSearchInput] = useState('');

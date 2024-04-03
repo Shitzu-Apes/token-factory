@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { AppConsumer } from '../../context/AppContext';
-
-// import styles from './Tokens.module.css';
 import OptionsSection from './components/OptionsSection/OptionsSection';
 import TokensSection from './components/TokensSection/TokensSection';
+
+import { AppConsumer } from '../../context/AppContext';
 import { useNearWalletContext } from '../../lib/useNearWallet';
 
 function TokensPage({}) {
@@ -40,24 +39,9 @@ function TokensPage({}) {
               <OptionsSection />
             </div>
           )}
-          <div
-          //  className={
-          //   isDarkMode ? styles.tokensSectionDark : styles.tokensSection
-          //   }
-          >
+          <div>
             <div>
-              <TokensSection
-                isDarkMode={isDarkMode}
-                // contract={contract}
-                // lsKey={lsKey}
-                // handlePage={handlePage}
-                // currentPage={currentPage}
-                // lsKeyCachedTokens={lsKeyCachedTokens}
-                // accountId={accountId}
-                // isSignedIn={signedIn}
-                // searchText={searchText}
-                // isDarkMode={isDarkMode}
-              />
+              <TokensSection isDarkMode={isDarkMode} />
             </div>
           </div>
         </div>

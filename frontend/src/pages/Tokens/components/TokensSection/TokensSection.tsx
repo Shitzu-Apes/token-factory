@@ -59,7 +59,7 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
           </button>
         </div>
       </div>
-      <div className={''}>
+      {/* <div className={''}>
         <Table columns={columns} data={currentData} isDarkMode={isDarkMode} />
       </div>
       <div className={''}>
@@ -70,9 +70,9 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
           currentPage={this.props.currentPage}
           isDarkMode={isDarkMode}
         />
-      </div>
+      </div> */}
     </div>
   );
 }
 
-export default React.memo(TokensSection);
+export default TokensSection;

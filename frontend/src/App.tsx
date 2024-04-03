@@ -1,4 +1,3 @@
-import './App.css';
 import React, { useEffect } from 'react';
 
 import { AppProvider } from './context/AppContext';
@@ -25,7 +24,7 @@ function App() {
   }, []);
 
   return (
-    <div className="flex screenHeight">
+    <div className="flex h-screen">
       <NearWalletContext.Provider value={nearWallet}>
         <AppProvider
           value={{
@@ -33,10 +32,10 @@ function App() {
             toggleDarkMode: () => setIsDarkMode(!isDarkMode)
           }}
         >
-          <div className="flexBasis17">
+          <div className="basis-[17%]">
             <NavBar />
           </div>
-          <div className="flexBasis83 fixedWrapper">
+          <div className="basis-[83%]">
             <TopBar
               isDarkMode={isDarkMode}
               handleSearch={() => {}}

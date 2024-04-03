@@ -78,8 +78,12 @@ export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: T
                               />
                             </div>
                             <div className="ml-4">
-                              <div className="font-medium text-gray-900">{token.metadata.name}</div>
-                              <div className="mt-1 text-gray-500">${token.metadata.symbol}</div>
+                              <div className="font-medium text-gray-900">
+                                {addrsFormatter(token.metadata.name)}
+                              </div>
+                              <div className="mt-1 text-gray-500">
+                                ${addrsFormatter(token.metadata.symbol)}
+                              </div>
                             </div>
                           </div>
                         </a>

@@ -1,10 +1,5 @@
 import { useState } from 'react';
 
-// import PaginationBox from '../../../../components/elements/PaginationBox';
-// import Table from '../../../../components/elements/Table';
-// import DefaultTokenIcon from '../../../../default-token.png';
-
-// import styles from './TokensSection.module.css';
 import { useNearWalletContext } from '../../../../lib/useNearWallet';
 import { useTokens } from '../../../../lib/useTokens';
 import Table from '../../../../components/Tokens/Table';
@@ -15,8 +10,6 @@ const SortedByLiquidity = 'liquidity';
 const SortedByYourTokens = 'your';
 const SortedByIndex = 'index';
 const rowsPerPage = 50;
-
-// const ot = (pool, token) => (token in pool.tokens ? pool.tt[1 - pool.tt.indexOf(token)] : null);
 
 function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
   const wallet = useNearWalletContext();
@@ -43,6 +36,12 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
 
     return 0;
   });
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePage = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <div className={''}>
@@ -83,23 +82,19 @@ function TokensSection({ isDarkMode }: { isDarkMode: boolean }) {
         </div>
       </div>
       <div className="">
-        <Table tokens={tokens.slice(0, 50)} pools={pools} />
-      </div>
-      <div>
-        <PaginationBox />
-      </div>
-      {/* <div className={''}>
-        <Table columns={columns} data={currentData} isDarkMode={isDarkMode} />
-      </div>
-      <div className={''}>
-        <PaginationBox
-          handlePage={this.props.handlePage}
-          rowsPerPage={rowsPerPage}
-          dataLength={dataFiltered.length}
-          currentPage={this.props.currentPage}
-          isDarkMode={isDarkMode}
+        <Table
+          tokens={tokens.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage)}
+          pools={pools}
         />
-      </div> */}
+      </div>
+      <div className="pb-5">
+        <PaginationBox
+          currentPage={currentPage}
+          handlePage={handlePage}
+          rowsPerPage={rowsPerPage}
+          dataLength={tokens.length}
+        />
+      </div>
     </div>
   );
 }

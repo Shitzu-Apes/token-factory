@@ -5,6 +5,7 @@ import { NearWalletContext, useNearWallet } from './lib/useNearWallet';
 import { ContractName } from './lib/constant';
 import TokensPage from './pages/TokensPage';
 import Hero from './components/Hero';
+import Footer from './components/Footer';
 
 function App() {
   const nearWallet = useNearWallet({ createAccessKeyFor: ContractName, network: 'mainnet' });
@@ -24,6 +25,7 @@ function App() {
           <Hero />
           <TokensPage />
         </div>
+        <Footer />
       </NearWalletContext.Provider>
     </div>
   );

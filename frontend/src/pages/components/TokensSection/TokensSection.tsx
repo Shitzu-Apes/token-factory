@@ -3,7 +3,11 @@ import { useMemo, useState } from 'react';
 import { useNearWalletContext } from '../../../lib/useNearWallet';
 import { useTokens } from '../../../lib/useTokens';
 import Table from '../../../components/Table';
-import { toTokenAccountId } from '../../../lib/constant';
+import {
+  localStorageKeyCachedTokens,
+  localStorageKeySortedBy,
+  toTokenAccountId
+} from '../../../lib/constant';
 import PaginationBox from '../../../components/PaginationBox';
 import { FunnelIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
 
@@ -14,12 +18,15 @@ const rowsPerPage = 30;
 
 function TokensSection() {
   const wallet = useNearWalletContext();
-  const [sortedBy, setSortedBy] = useState(SortedByLiquidity);
+  const [sortedBy, setSortedBy] = useState(
+    window.localStorage.getItem(localStorageKeySortedBy) || SortedByLiquidity
+  );
   const [searchInput, setSearchInput] = useState('');
 
   const { tokens, pools, tokenIdx } = useTokens(wallet);
 
   tokens.sort((a, b) => {
+    window.localStorage.setItem(localStorageKeySortedBy, sortedBy);
     if (sortedBy === SortedByLiquidity) {
       const tokenALiquidity =
         toTokenAccountId(a.metadata.symbol) in pools
@@ -57,23 +64,25 @@ function TokensSection() {
     return 0;
   });
 
+  if (tokens.length > 0) {
+    window.localStorage.setItem(localStorageKeyCachedTokens, JSON.stringify(tokens));
+  }
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePage = (page: number) => {
     setCurrentPage(page);
   };
 
-  const filteredAndSortedTokens = useMemo(
-    () =>
-      tokens.filter((token) => {
-        if (!searchInput) return true;
-        return (
-          token.metadata.name.toLowerCase().includes(searchInput.toLowerCase()) ||
-          token.metadata.symbol.toLowerCase().includes(searchInput.toLowerCase())
-        );
-      }),
-    [tokens, searchInput, currentPage, sortedBy]
-  );
+  const filteredAndSortedTokens = useMemo(() => {
+    return tokens.filter((token) => {
+      if (!searchInput) return true;
+      return (
+        token.metadata.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+        token.metadata.symbol.toLowerCase().includes(searchInput.toLowerCase())
+      );
+    });
+  }, [tokens, searchInput, currentPage, sortedBy]);
 
   return (
     <div className={''}>

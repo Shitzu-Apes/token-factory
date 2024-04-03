@@ -60,11 +60,16 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
         );
       }
 
-      const tokens = [...cachedTokens, ...(await Promise.all(getTokensPromises)).flat()];
+      const newTokens = (await Promise.all(getTokensPromises)).flat();
+      for (let i = 0; i < newTokens.length; i++) {
+        newTokens[i].index = i + cachedTokens.length;
+      }
+
+      const tokens = [...cachedTokens, ...newTokens];
 
       const tokenIdx: { [token: string]: number } = {};
       for (let i = 0; i < tokens.length; i++) {
-        tokenIdx[tokens[i].metadata.symbol] = i;
+        tokenIdx[tokens[i].metadata.symbol] = tokens[i].index;
       }
       setTokenIdx(tokenIdx);
 

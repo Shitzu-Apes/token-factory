@@ -30,6 +30,7 @@ export const BoatOfGas = BigInt(200) * TGas;
 export const toTokenAccountId = (tokenId: string) => `${tokenId.toLowerCase()}.${ContractName}`;
 
 export const localStorageKeyCachedTokens = 'tkn.near:v02:cachedTokens';
+export const localStorageKeySortedBy = 'tkn.near:v02:sortedBy';
 export const NFT_BASE_URL =
   'https://bafybeifqejvrnlzraceyapuzne6d2cl2s5bolosrufpwp3lw22pqfcafo4.ipfs.nftstorage.link';
 

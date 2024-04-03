@@ -30,13 +30,13 @@ function TokensPage({}) {
         <div>
           {wallet.isConnected() && (
             <div
-              className="padding-20-40"
+              className="px-2 py-4"
               style={{
                 backgroundColor: isDarkMode ? '#282828' : '#f8f8f8',
                 color: isDarkMode ? '#ffffff' : undefined
               }}
             >
-              <OptionsSection />
+              {/* <OptionsSection /> */}
             </div>
           )}
           <div>

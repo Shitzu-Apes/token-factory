@@ -235,13 +235,13 @@ const OptionsSection = () => {
 
   return (
     <div>
-      <div>
+      <div className="dark:text-white">
         <div className="form-group">
           <label htmlFor="tokenName">Token Name</label>
           <div className="input-group">
             <input
               type="text"
-              className="form-control form-control-large"
+              className="form-control form-control-large dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white"
               id="tokenName"
               placeholder="Epic Moon Rocket"
               value={tokenArgs.metadata.name}
@@ -265,7 +265,10 @@ const OptionsSection = () => {
           <div className="input-group">
             <input
               type="text"
-              className={tokenIdClass()}
+              className={
+                tokenIdClass() +
+                ' dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white'
+              }
               id="tokenId"
               placeholder="MOON"
               value={tokenArgs.metadata.symbol}
@@ -306,7 +309,7 @@ const OptionsSection = () => {
           <div className="input-group">
             <input
               type="number"
-              className="form-control form-control-large"
+              className="form-control form-control-large dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white"
               id="totalSupply"
               placeholder="1000000000"
               value={+tokenArgs.total_supply}
@@ -336,7 +339,7 @@ const OptionsSection = () => {
           <div className="input-group">
             <input
               type="number"
-              className="form-control form-control-large"
+              className="form-control form-control-large dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white"
               id="tokenDecimals"
               placeholder="18"
               value={tokenArgs.metadata.decimals}
@@ -373,13 +376,32 @@ const OptionsSection = () => {
                 />
               )}
             </div>
-            <div>
-              <section className="container">
-                <div {...getRootProps({ className: 'dropzone' })}>
+            <div className="w-full">
+              <div {...getRootProps({ className: 'dropzone max-w-xl' })}>
+                <label className="flex justify-center w-full h-32 px-4 transition bg-gray-100 dark:bg-gray-800 border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
+                  <span className="flex items-center space-x-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-6 h-6 text-gray-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      />
+                    </svg>
+                    <span className="font-medium text-gray-600 dark:text-gray-200">
+                      Drop files to Attach, or{' '}
+                      <span className="text-blue-600 underline">browse</span>
+                    </span>
+                  </span>
                   <input {...getInputProps()} />
-                  <p>Drag 'n' drop some files here, or click to select files</p>
-                </div>
-              </section>
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -389,7 +411,10 @@ const OptionsSection = () => {
           <div className="input-group">
             <input
               type="text"
-              className={ownerIdClass()}
+              className={
+                ownerIdClass() +
+                ' dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white'
+              }
               id="ownerId"
               placeholder={wallet.accountId || ''}
               value={tokenArgs.owner_id}
@@ -415,7 +440,7 @@ const OptionsSection = () => {
         </div>
         <div className="form-group">
           <div>
-            <button className="btn btn-success" onClick={createToken}>
+            <button className="btn btn-success bg-primary-dark" onClick={createToken}>
               Create Token ({fromYocto(requiredDeposit)} Ⓝ)
             </button>
           </div>

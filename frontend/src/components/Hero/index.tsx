@@ -56,6 +56,7 @@ export default function Hero() {
               </div>
               <a
                 href="https://shitzuapes.xyz"
+                target="_blank"
                 className="text-sm font-semibold leading-6 text-white"
               >
                 What is SHITZU? <span aria-hidden="true">→</span>

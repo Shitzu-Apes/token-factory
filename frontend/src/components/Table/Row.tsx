@@ -4,6 +4,8 @@ import { TPool } from '../../lib/useTokens';
 import { TokenArgs } from '../../pages/components/OptionsSection/OptionsSection';
 
 import DexScreenerLogo from '../../assets/icons/DexScreener.png';
+import RefLogo from '../../assets/icons/ref.png';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 
 export default function Row({
   pool,
@@ -51,14 +53,23 @@ export default function Row({
         </div>
 
         {pool && (
-          <a
-            href={`https://dexscreener.com/near/refv1-${pool.index}`}
-            target="_blank"
-            className="mt-1 text-gray-500 dark:text-gray-300 flex items-center"
-          >
-            <img src={DexScreenerLogo} className="w-4 h-4 mr-1" alt="DEXSCREENER" />
-            DEXSCREENER
-          </a>
+          <div className="flex gap-2 items-center mt-1">
+            <a
+              href={`https://dexscreener.com/near/refv1-${pool.index}`}
+              target="_blank"
+              className="text-gray-500 dark:text-gray-300 flex items-center"
+            >
+              <img src={DexScreenerLogo} className="w-4 h-4" alt="DEXSCREENER" />
+            </a>
+            <hr className="w-0.5 h-4 bg-gray-500 dark:bg-gray-300" />
+            <a
+              href={`https://app.ref.finance/pool/${pool.index}`}
+              target="_blank"
+              className="text-gray-500 dark:text-gray-300 flex items-center"
+            >
+              <img src={RefLogo} className="w-4 h-4" alt="REF" />
+            </a>
+          </div>
         )}
       </td>
       <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 dark:text-gray-300">
@@ -68,27 +79,33 @@ export default function Row({
         <a
           href={`https://app.ref.finance/#wrap.near|${toTokenAccountId(token.metadata.symbol)}`}
           target="_blank"
-          className="mt-1 text-primary-dark hover:text-indigo-900"
+          className="mt-1 text-primary-dark"
         >
-          Buy on Ref
+          Buy on <img src={RefLogo} className="w-4 h-4 inline" /> Ref
         </a>
       </td>
       <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 dark:text-gray-300">
-        {pool ? (
-          <a
-            href={`https://near.social/slimedragon.near/widget/LockLP?poolId=${pool.index}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {(
-              (pool.locked.reduce((acc, lock) => acc + Number(lock[1].amount), 0) /
-                Number(pool.shares_total_supply)) *
-              100
-            ).toFixed(2) + '%'}
-          </a>
-        ) : (
-          '0%'
-        )}
+        <div className="flex items-center">
+          {pool ? (
+            <>
+              {(
+                (pool.locked.reduce((acc, lock) => acc + Number(lock[1].amount), 0) /
+                  Number(pool.shares_total_supply)) *
+                100
+              ).toFixed(2) + '%'}
+
+              <a
+                href={`https://near.social/slimedragon.near/widget/LockLP?poolId=${pool.index}`}
+                target="_blank"
+                className="ml-1 text-primary-dark"
+              >
+                <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+              </a>
+            </>
+          ) : (
+            '0%'
+          )}
+        </div>
       </td>
     </tr>
   );

@@ -60,7 +60,23 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
     startUp();
   }, [network]);
 
-  const isConnected = useCallback(() => !!wallet, [wallet]);
+  useEffect(() => {
+    if (!selector) return
+    const handleSignedIn = async () => {
+      const isSignedIn = selector.isSignedIn();
+      if (isSignedIn) {
+        const walletInstance = await selector.wallet();
+        const accountId = selector.store.getState().accounts[0].accountId;
+        setWallet(walletInstance);
+        setAccountId(accountId);
+      }
+    }
+    const subscription = selector.store.observable.subscribe(handleSignedIn)
+    selector.on('signedIn', handleSignedIn)
+    return subscription.unsubscribe()
+  }, [selector])
+
+  const isConnected = useCallback(() => !!wallet, [wallet, accountId]);
 
   const signIn = useCallback(async () => {
     if (!selector || !createAccessKeyFor) throw new Error('Contract ID not initialized');

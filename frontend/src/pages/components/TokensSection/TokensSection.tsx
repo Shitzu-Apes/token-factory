@@ -7,7 +7,6 @@ import {
   localStorageKeySortedBy,
   toTokenAccountId
 } from '../../../lib/constant';
-import PaginationBox from '../../../components/PaginationBox';
 import { BarsArrowDownIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
 import { useNearWalletContext } from '~/lib/useNearWallet';
 import { useTokens } from '~/lib/useTokens';

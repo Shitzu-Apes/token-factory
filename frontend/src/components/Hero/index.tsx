@@ -76,7 +76,7 @@ export default function Hero() {
           <div className={`absolute inset-0 bg-black bg-opacity-70 transition-all`}>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="rounded-lg p-8 flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold text-center text-primary-dark">
+                <h2 className="text-2xl font-bold text-center text-primary-light leading-relaxed">
                   Only Shitzu NFT holder can deploy token.
                   <br />
                   Check us out on NFT marketplace.
@@ -86,7 +86,7 @@ export default function Hero() {
                     return (
                       <a
                         key={link}
-                        className="mt-6 cursor-pointer rounded-lg w-[150px] text-center bg-primary-dark px-3.5 py-3 text-lg font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                        className="mt-6 cursor-pointer rounded-lg w-[150px] text-center bg-primary-dark px-3 py-2 text-lg font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white hover:bg-primary-light"
                         href={link}
                         target="_blank"
                         rel="noreferrer"

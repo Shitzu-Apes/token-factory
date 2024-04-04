@@ -1,4 +1,4 @@
-import { useNearWalletContext } from '../../lib/useNearWallet';
+import { useNearWalletContext } from '~/lib/useNearWallet';
 import { UserIcon } from '@heroicons/react/20/solid';
 
 export default function TopBar({

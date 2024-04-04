@@ -1,7 +1,7 @@
-import ParasLogo from '../assets/icons/Paras.png';
-import MintBaseLogo from '../assets/icons/MintBase.png';
-import MitteLogo from '../assets/icons/Mitte.jpg';
-import TradeportLogo from '../assets/icons/Tradeport.png';
+import ParasLogo from '~/assets/icons/Paras.png';
+import MintBaseLogo from '~/assets/icons/MintBase.png';
+import MitteLogo from '~/assets/icons/Mitte.jpg';
+import TradeportLogo from '~/assets/icons/Tradeport.png';
 
 export const UploadResizeWidth = 96;
 export const UploadResizeHeight = 96;

@@ -1,4 +1,7 @@
+import { XMarkIcon } from '@heroicons/react/20/solid';
+import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+
 import {
   ContractName,
   MaxAccountIdLen,
@@ -10,11 +13,9 @@ import {
   ValidTokenIdRe,
   BoatOfGas,
   OneNear
-} from '../../../lib/constant';
-import { useNearWalletContext } from '../../../lib/useNearWallet';
-import { useEffect, useState } from 'react';
-import { imageFileToBase64 } from '../../../lib/imageFileToBase64';
-import { XMarkIcon } from '@heroicons/react/20/solid';
+} from '~/lib/constant';
+import { imageFileToBase64 } from '~/lib/imageFileToBase64';
+import { useNearWalletContext } from '~/lib/useNearWallet';
 
 type FungibleTokenMetadata = {
   spec: 'ft-1.0.0';
@@ -100,7 +101,9 @@ const OptionsSection = () => {
         }
       });
       exist = description !== null;
-    } catch {}
+    } catch {
+      // ignore
+    }
 
     setTokenArgs((prevArgs) => ({
       ...prevArgs,
@@ -296,7 +299,7 @@ const OptionsSection = () => {
             </div>
           )}
           <small>
-            It'll be used to identify the token and to create an Account ID for the token
+            It&apos;ll be used to identify the token and to create an Account ID for the token
             <code>
               {tokenArgs.metadata.symbol
                 ? tokenArgs.metadata.symbol.toLowerCase() + '.' + ContractName
@@ -401,11 +404,11 @@ const OptionsSection = () => {
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
-                          stroke-width="2"
+                          strokeWidth="2"
                         >
                           <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                           />
                         </svg>
@@ -449,7 +452,7 @@ const OptionsSection = () => {
           {tokenArgs.ownerStatus === 'invalid' && (
             <div>
               <small>
-                <b>Account doesn't exists.</b>
+                <b>Account doesn&apos;t exists.</b>
               </small>
             </div>
           )}

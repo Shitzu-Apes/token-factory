@@ -1,11 +1,11 @@
+import Footer from './components/Footer';
+import Hero from './components/Hero';
 import TopBar from './components/TopBar';
+import { ContractName } from './lib/constant';
+import { NearWalletContext, useNearWallet } from './lib/useNearWallet';
+import TokensPage from './pages/TokensPage';
 
 import '@near-wallet-selector/modal-ui/styles.css';
-import { NearWalletContext, useNearWallet } from './lib/useNearWallet';
-import { ContractName } from './lib/constant';
-import TokensPage from './pages/TokensPage';
-import Hero from './components/Hero';
-import Footer from './components/Footer';
 
 function App() {
   const nearWallet = useNearWallet({ createAccessKeyFor: ContractName, network: 'mainnet' });

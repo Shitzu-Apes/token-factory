@@ -1,10 +1,10 @@
-import { ExplorerBaseUrl, toTokenAccountId } from '../../lib/constant';
-import { addrsFormatter, bnFormatter, priceFormatter } from '../../lib/formatter';
-import { TPool } from '../../lib/useTokens';
-import { TokenArgs } from '../../pages/components/OptionsSection/OptionsSection';
+import { ExplorerBaseUrl, toTokenAccountId } from '~/lib/constant';
+import { addrsFormatter, bnFormatter, priceFormatter } from '~/lib/formatter';
+import { TPool } from '~/lib/useTokens';
+import { TokenArgs } from '~/pages/components/OptionsSection/OptionsSection';
 
-import DexScreenerLogo from '../../assets/icons/DexScreener.png';
-import RefLogo from '../../assets/icons/ref.png';
+import DexScreenerLogo from '~/assets/icons/DexScreener.png';
+import RefLogo from '~/assets/icons/ref.png';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 
 export default function Row({

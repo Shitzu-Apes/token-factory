@@ -1,15 +1,15 @@
+import { FunnelIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
 import { useMemo, useState } from 'react';
 
-import { useNearWalletContext } from '../../../lib/useNearWallet';
-import { useTokens } from '../../../lib/useTokens';
-import Table from '../../../components/Table';
+import PaginationBox from '~/components/PaginationBox';
+import Table from '~/components/Table';
 import {
   localStorageKeyCachedTokens,
   localStorageKeySortedBy,
   toTokenAccountId
-} from '../../../lib/constant';
-import PaginationBox from '../../../components/PaginationBox';
-import { FunnelIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
+} from '~/lib/constant';
+import { useNearWalletContext } from '~/lib/useNearWallet';
+import { useTokens } from '~/lib/useTokens';
 
 const SortedByLiquidity = 'liquidity';
 const SortedByLocked = 'lock';
@@ -121,7 +121,7 @@ function TokensSection() {
                       aria-hidden="true"
                     />
                   </div>
-                  <div
+                  <button
                     className={`
                     ${sortedBy === SortedByLiquidity ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700'}
                     border border-primary-dark cursor-pointer
@@ -135,8 +135,8 @@ function TokensSection() {
                       ${sortedBy === SortedByLiquidity ? 'bg-primary-dark' : 'bg-transparent'}
                       absolute inset-x-0 bottom-0 h-1`}
                     />
-                  </div>
-                  <div
+                  </button>
+                  <button
                     className={`
                     ${sortedBy === SortedByLocked ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700'}
                     border border-primary-dark cursor-pointer
@@ -150,8 +150,8 @@ function TokensSection() {
                       ${sortedBy === SortedByLocked ? 'bg-primary-dark' : 'bg-transparent'}
                       absolute inset-x-0 bottom-0 h-1`}
                     />
-                  </div>
-                  <div
+                  </button>
+                  <button
                     className={`
                     ${sortedBy === SortedByIndex ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300 hover:text-gray-700'}
                     border border-primary-dark cursor-pointer
@@ -165,7 +165,7 @@ function TokensSection() {
                       ${sortedBy === SortedByIndex ? 'bg-primary-dark' : 'bg-transparent'}
                       absolute inset-x-0 bottom-0 h-1`}
                     />
-                  </div>
+                  </button>
                 </nav>
               </div>
             </div>

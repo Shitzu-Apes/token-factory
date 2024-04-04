@@ -169,7 +169,7 @@ const OptionsSection = () => {
       };
 
       const required_deposit = await wallet.viewMethod({
-        contractId: 'tkn.near',
+        contractId: import.meta.env.VITE_CONTRACT_ID!,
         method: 'get_required_deposit',
         args: {
           account_id: wallet.accountId,

@@ -167,7 +167,7 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
           media: string;
         };
       }[] = await viewMethod({
-        contractId: 'shitzu.bodega-lab.near',
+        contractId: import.meta.env.VITE_SHITZU_NFT_CONTRACT_ID!,
         method: 'nft_tokens_for_owner',
         args: {
           account_id: accountId,

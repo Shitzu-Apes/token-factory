@@ -9,7 +9,7 @@ import {
   toTokenAccountId
 } from '../../../lib/constant';
 import PaginationBox from '../../../components/PaginationBox';
-import { FunnelIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
+import { BarsArrowDownIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
 
 const SortedByLiquidity = 'liquidity';
 const SortedByLocked = 'lock';
@@ -116,7 +116,7 @@ function TokensSection() {
                   aria-label="Tabs"
                 >
                   <div className="bg-primary-dark flex items-center justify-center h-10 w-10 rounded-l-lg">
-                    <FunnelIcon
+                    <BarsArrowDownIcon
                       className="h-6 w-6 text-gray-100 dark:text-gray-900"
                       aria-hidden="true"
                     />

@@ -74,7 +74,7 @@ export default function Row({
         <div className="font-medium text-gray-900 dark:text-white">
           {pool
             ? nearUSDCPrice
-              ? `$ ${bnFormatter((pool.liquidity / nearUSDCPrice).toString(), 24 - (24 - 6))}`
+              ? `$ ${bnFormatter((pool.liquidity / nearUSDCPrice).toString(), 24 - (24 - 6), 2, 2)}`
               : `Ⓝ ${bnFormatter(pool.liquidity.toString())}`
             : 'Not Found'}
         </div>

@@ -4,6 +4,7 @@ import { TPool } from '../../lib/useTokens';
 import { TokenArgs } from '../../pages/components/OptionsSection/OptionsSection';
 
 import DexScreenerLogo from '../../assets/icons/DexScreener.png';
+import { InformationCircleIcon } from '@heroicons/react/20/solid';
 
 export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: TPool }) {
   return (
@@ -46,9 +47,12 @@ export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: T
                   </th>
                   <th
                     scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white flex items-center"
                   >
-                    Lock
+                    Lock{' '}
+                    <a href="https://near.social/slimedragon.near/widget/LockLP" rel="noreferrer">
+                      <InformationCircleIcon className="w-4 h-4 ml-1 text-gray-500 dark:text-gray-300" />
+                    </a>
                   </th>
                 </tr>
               </thead>
@@ -122,13 +126,21 @@ export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: T
                         </a>
                       </td>
                       <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 dark:text-gray-300">
-                        {pool
-                          ? (
+                        {pool ? (
+                          <a
+                            href={`https://near.social/slimedragon.near/widget/LockLP?poolId=${pool.index}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {(
                               (pool.locked.reduce((acc, lock) => acc + Number(lock[1].amount), 0) /
                                 Number(pool.shares_total_supply)) *
                               100
-                            ).toFixed(2) + '%'
-                          : '0%'}
+                            ).toFixed(2) + '%'}
+                          </a>
+                        ) : (
+                          '0%'
+                        )}
                       </td>
                     </tr>
                   );

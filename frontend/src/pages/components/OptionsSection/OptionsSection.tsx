@@ -238,7 +238,7 @@ const OptionsSection = () => {
 
   return (
     <div>
-      <div className="dark:text-white">
+      <div className="dark:text-white flex flex-col gap-3">
         <div className="form-group">
           <label htmlFor="tokenName">Token Name</label>
           <div className="input-group">
@@ -459,7 +459,8 @@ const OptionsSection = () => {
         </div>
         <div className="form-group">
           <div>
-            <button className="btn btn-success bg-primary-dark" onClick={createToken}>
+            <button className="cursor-pointer rounded-md text-gray-800 px-3.5 py-2.5 text-sm font-semibold bg-primary-dark shadow-sm hover:bg-indigo-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white
+" onClick={createToken}>
               Create Token ({fromYocto(requiredDeposit)} Ⓝ)
             </button>
           </div>

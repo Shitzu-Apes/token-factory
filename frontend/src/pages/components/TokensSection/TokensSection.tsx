@@ -86,7 +86,7 @@ function TokensSection() {
 
   return (
     <div className={''}>
-      <div className="flex justify-between items-center px-6 lg:px-8 pt-4">
+      <div className="flex justify-between items-center px-6 lg:px-8 pt-4 flex-wrap gap-2">
         <div className="flex w-[400px]">
           <div className="relative w-full flex">
             <div className="bg-primary-dark flex justify-center items-center h-10 w-10 rounded-l-lg">

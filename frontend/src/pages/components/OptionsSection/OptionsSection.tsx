@@ -1,5 +1,6 @@
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import { useEffect, useState } from 'react';
+import { useNotifications } from '@web3-onboard/react';
+import { FC, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import {
@@ -51,8 +52,10 @@ const defaultTokenArgs = (
 
 const fromYocto = (a: bigint) => (a ? (Number(a) / Number(OneNear)).toFixed(6) : '0');
 
-const OptionsSection = () => {
+const OptionsSection: FC = () => {
   const wallet = useNearWalletContext();
+
+  const [_, customNotification] = useNotifications();
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: async (acceptedFiles) => {
@@ -219,14 +222,41 @@ const OptionsSection = () => {
       }
     });
 
-    await wallet.wallet?.signAndSendTransactions({
-      transactions: [
-        {
-          receiverId: import.meta.env.VITE_CONTRACT_ID!,
-          actions,
-        }
-      ],
+    const { update } = customNotification({
+      eventCode: 'createToken',
+      type: 'pending',
+      message: 'Creating your token...'
     });
+    try {
+      const res = await wallet.wallet?.signAndSendTransactions({
+        transactions: [
+          {
+            receiverId: import.meta.env.VITE_CONTRACT_ID!,
+            actions
+          }
+        ]
+      });
+      let hash: string | undefined;
+      if (typeof res === 'object') {
+        hash = res[0].transaction_outcome.id;
+      }
+      update({
+        eventCode: 'createTokenSuccess',
+        type: 'success',
+        message: 'Token creation succeeded! Click here',
+        onClick: () => window.open(`${import.meta.env.VITE_EXPLORER_URL}/txns/${hash}`, '_blank'),
+        autoDismiss: 15_000
+      });
+    } catch (err) {
+      console.error(err);
+      update({
+        eventCode: 'createTokenError',
+        type: 'error',
+        message: 'Token creation failed!',
+        autoDismiss: 5_000
+      });
+      throw err;
+    }
   }
 
   // Decoy

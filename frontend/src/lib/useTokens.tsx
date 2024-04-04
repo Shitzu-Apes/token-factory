@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNearWallet } from './useNearWallet';
 import {
-  ContractName,
-  RefContractId,
   SimplePool,
   localStorageKeyCachedTokens,
-  wNEAR
 } from './constant';
 import { TokenArgs } from '~/pages/components/OptionsSection/OptionsSection';
 
@@ -39,7 +36,7 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
     (async () => {
       if (wallet.provider === null) return;
       const numTokens = await wallet.viewMethod({
-        contractId: ContractName,
+        contractId: import.meta.env.VITE_CONTRACT_ID!,
         method: 'get_number_of_tokens',
         args: {}
       });
@@ -53,7 +50,7 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
       for (let i = cachedTokens.length; i < numTokens; i += limit) {
         getTokensPromises.push(
           wallet.viewMethod({
-            contractId: ContractName,
+            contractId: import.meta.env.VITE_CONTRACT_ID!,
             method: 'get_tokens',
             args: { from_index: i, limit }
           })
@@ -86,7 +83,7 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
       if (wallet.provider === null) return;
       if (tokens.length === 0) return;
       const numPools = await wallet.viewMethod({
-        contractId: RefContractId,
+        contractId: import.meta.env.VITE_REF_CONTRACT_ID!,
         method: 'get_number_of_pools',
         args: {}
       });
@@ -96,7 +93,7 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
       for (let i = 0; i < numPools; i += limit) {
         promises.push(
           wallet.viewMethod({
-            contractId: RefContractId,
+            contractId: import.meta.env.VITE_REF_CONTRACT_ID!,
             method: 'get_pools',
             args: { from_index: i, limit }
           })
@@ -115,7 +112,7 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
 
       rawPools.forEach((pool, i) => {
         if (pool.pool_kind === SimplePool) {
-          const nearIdx = pool.token_account_ids.indexOf(wNEAR);
+          const nearIdx = pool.token_account_ids.indexOf(import.meta.env.VITE_WNEAR_ID!);
           const token_contract = pool.token_account_ids[1 - nearIdx];
           if (nearIdx === -1) return;
 

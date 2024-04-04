@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import {
-  ContractName,
   MaxAccountIdLen,
   MaxU128,
   MinAccountIdLen,
@@ -94,7 +93,7 @@ const OptionsSection = () => {
     let exist = false;
     try {
       const description = await wallet.viewMethod({
-        contractId: ContractName,
+        contractId: import.meta.env.VITE_CONTRACT_ID!,
         method: 'get_token',
         args: {
           token_id: tokenId
@@ -121,7 +120,7 @@ const OptionsSection = () => {
 
   const isValidTokenId = (tokenId: string) => {
     tokenId = tokenId.toLowerCase();
-    return tokenId.match(ValidTokenIdRe) && isValidAccountId(tokenId + '.' + ContractName);
+    return tokenId.match(ValidTokenIdRe) && isValidAccountId(tokenId + '.' + import.meta.env.VITE_CONTRACT_ID!);
   };
 
   const tokenIdClass = () => {
@@ -221,7 +220,7 @@ const OptionsSection = () => {
     await wallet.wallet?.signAndSendTransactions({
       transactions: [
         {
-          receiverId: ContractName,
+          receiverId: import.meta.env.VITE_CONTRACT_ID!,
           actions
         }
       ]
@@ -302,7 +301,7 @@ const OptionsSection = () => {
             It&apos;ll be used to identify the token and to create an Account ID for the token
             <code>
               {tokenArgs.metadata.symbol
-                ? tokenArgs.metadata.symbol.toLowerCase() + '.' + ContractName
+                ? tokenArgs.metadata.symbol.toLowerCase() + '.' + import.meta.env.VITE_CONTRACT_ID!
                 : ''}
             </code>
           </small>

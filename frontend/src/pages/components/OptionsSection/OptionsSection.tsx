@@ -1,6 +1,8 @@
+import { XMarkIcon } from '@heroicons/react/20/solid';
+import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+
 import {
-  ContractName,
   MaxAccountIdLen,
   MaxU128,
   MinAccountIdLen,
@@ -10,11 +12,9 @@ import {
   ValidTokenIdRe,
   BoatOfGas,
   OneNear
-} from '../../../lib/constant';
-import { useNearWalletContext } from '../../../lib/useNearWallet';
-import { useEffect, useState } from 'react';
-import { imageFileToBase64 } from '../../../lib/imageFileToBase64';
-import { XMarkIcon } from '@heroicons/react/20/solid';
+} from '~/lib/constant';
+import { imageFileToBase64 } from '~/lib/imageFileToBase64';
+import { useNearWalletContext } from '~/lib/useNearWallet';
 
 type FungibleTokenMetadata = {
   spec: 'ft-1.0.0';
@@ -93,14 +93,16 @@ const OptionsSection = () => {
     let exist = false;
     try {
       const description = await wallet.viewMethod({
-        contractId: ContractName,
+        contractId: import.meta.env.VITE_CONTRACT_ID!,
         method: 'get_token',
         args: {
           token_id: tokenId
         }
       });
       exist = description !== null;
-    } catch {}
+    } catch {
+      // ignore
+    }
 
     setTokenArgs((prevArgs) => ({
       ...prevArgs,
@@ -118,7 +120,7 @@ const OptionsSection = () => {
 
   const isValidTokenId = (tokenId: string) => {
     tokenId = tokenId.toLowerCase();
-    return tokenId.match(ValidTokenIdRe) && isValidAccountId(tokenId + '.' + ContractName);
+    return tokenId.match(ValidTokenIdRe) && isValidAccountId(tokenId + '.' + import.meta.env.VITE_CONTRACT_ID!);
   };
 
   const tokenIdClass = () => {
@@ -218,7 +220,7 @@ const OptionsSection = () => {
     await wallet.wallet?.signAndSendTransactions({
       transactions: [
         {
-          receiverId: ContractName,
+          receiverId: import.meta.env.VITE_CONTRACT_ID!,
           actions
         }
       ]
@@ -236,7 +238,7 @@ const OptionsSection = () => {
 
   return (
     <div>
-      <div className="dark:text-white">
+      <div className="dark:text-white flex flex-col gap-3">
         <div className="form-group">
           <label htmlFor="tokenName">Token Name</label>
           <div className="input-group">
@@ -296,10 +298,10 @@ const OptionsSection = () => {
             </div>
           )}
           <small>
-            It'll be used to identify the token and to create an Account ID for the token
+            It&apos;ll be used to identify the token and to create an Account ID for the token
             <code>
               {tokenArgs.metadata.symbol
-                ? tokenArgs.metadata.symbol.toLowerCase() + '.' + ContractName
+                ? tokenArgs.metadata.symbol.toLowerCase() + '.' + import.meta.env.VITE_CONTRACT_ID!
                 : ''}
             </code>
           </small>
@@ -401,11 +403,11 @@ const OptionsSection = () => {
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
-                          stroke-width="2"
+                          strokeWidth="2"
                         >
                           <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                           />
                         </svg>
@@ -449,7 +451,7 @@ const OptionsSection = () => {
           {tokenArgs.ownerStatus === 'invalid' && (
             <div>
               <small>
-                <b>Account doesn't exists.</b>
+                <b>Account doesn&apos;t exists.</b>
               </small>
             </div>
           )}
@@ -457,7 +459,8 @@ const OptionsSection = () => {
         </div>
         <div className="form-group">
           <div>
-            <button className="btn btn-success bg-primary-dark" onClick={createToken}>
+            <button className="cursor-pointer rounded-md text-gray-800 px-3.5 py-2.5 text-sm font-semibold bg-primary-dark shadow-sm hover:bg-indigo-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white
+" onClick={createToken}>
               Create Token ({fromYocto(requiredDeposit)} Ⓝ)
             </button>
           </div>

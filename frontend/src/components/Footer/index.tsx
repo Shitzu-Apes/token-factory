@@ -1,5 +1,5 @@
-import TelegramIcon from '../../assets/icons/TelegramIcon.svg';
-import TwitterIcon from '../../assets/icons/TwitterIcon.svg';
+import TelegramIcon from '~/assets/icons/TelegramIcon.svg';
+import TwitterIcon from '~/assets/icons/TwitterIcon.svg';
 
 export default function Footer() {
   return (

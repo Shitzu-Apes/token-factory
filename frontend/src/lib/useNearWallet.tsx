@@ -41,6 +41,7 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
   }, [selector]);
 
   useEffect(() => {
+    console.log('network', network)
     const startUp = async () => {
       const selector = await setupWalletSelector({
         network,

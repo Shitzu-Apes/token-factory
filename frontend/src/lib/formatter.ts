@@ -15,6 +15,8 @@ export const bnFormatter = (
 
   const f = new Intl.NumberFormat('en-US', {
     style: 'decimal',
+    notation: 'compact',
+    compactDisplay: 'short',
     minimumFractionDigits,
     maximumFractionDigits
   });

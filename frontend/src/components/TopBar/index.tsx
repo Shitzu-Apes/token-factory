@@ -1,4 +1,4 @@
-import { useNearWalletContext } from '../../lib/useNearWallet';
+import { useNearWalletContext } from '~/lib/useNearWallet';
 import { UserIcon } from '@heroicons/react/20/solid';
 
 export default function TopBar({
@@ -31,7 +31,7 @@ export default function TopBar({
                 {wallet.accountId}
               </p>
               <div
-                className="cursour-pointer text-xs font-medium text-gray-500 dark:text-gray-100 group-hover:text-gray-700"
+                className="cursor-pointer text-xs font-medium text-gray-500 dark:text-gray-100 group-hover:text-gray-700"
                 onClick={requestSignOut}
               >
                 Log Out

@@ -1,10 +1,10 @@
-import { ExplorerBaseUrl, toTokenAccountId } from '../../lib/constant';
-import { addrsFormatter, bnFormatter, priceFormatter } from '../../lib/formatter';
-import { TPool } from '../../lib/useTokens';
-import { TokenArgs } from '../../pages/components/OptionsSection/OptionsSection';
+import { toTokenAccountId } from '~/lib/constant';
+import { addrsFormatter, bnFormatter, priceFormatter } from '~/lib/formatter';
+import { TPool } from '~/lib/useTokens';
+import { TokenArgs } from '~/pages/components/OptionsSection/OptionsSection';
 
-import DexScreenerLogo from '../../assets/icons/DexScreener.png';
-import RefLogo from '../../assets/icons/ref.png';
+import DexScreenerLogo from '~/assets/icons/DexScreener.png';
+import RefLogo from '~/assets/icons/ref.png';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 
 export default function Row({
@@ -28,7 +28,7 @@ export default function Row({
     <tr key={token.metadata.symbol}>
       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm sm:pl-0">
         <a
-          href={`${ExplorerBaseUrl}/token/${toTokenAccountId(token.metadata.symbol)}`}
+          href={`${import.meta.env.VITE_EXPLORER_URL}/token/${toTokenAccountId(token.metadata.symbol)}`}
           target="_blank"
         >
           <div className="flex items-center">
@@ -47,7 +47,7 @@ export default function Row({
         </a>
       </td>
       <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-        <a href={`${ExplorerBaseUrl}/address/${token.owner_id}`} target="_blank">
+        <a href={`${import.meta.env.VITE_EXPLORER_URL}/address/${token.owner_id}`} target="_blank">
           <div className="text-gray-900 dark:text-white">{addrsFormatter(token.owner_id)}</div>
           <div className="mt-1 text-gray-500 dark:text-gray-300">{''}</div>
         </a>

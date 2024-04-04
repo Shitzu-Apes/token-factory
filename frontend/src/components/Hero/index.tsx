@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import ShitzuIcon from '../../assets/icons/shitzu.svg';
-import ShitzuFace from '../../assets/icons/shitzu_face.svg';
-import { useNearWalletContext } from '../../lib/useNearWallet';
-import OptionsSection from '../../pages/components/OptionsSection/OptionsSection';
-import { NFT_LINKS } from '../../lib/constant';
+import ShitzuIcon from '~/assets/icons/shitzu.svg';
+import ShitzuFace from '~/assets/icons/shitzu_face.svg';
+import { useNearWalletContext } from '~/lib/useNearWallet';
+import OptionsSection from '~/pages/components/OptionsSection/OptionsSection';
+import { NFT_LINKS } from '~/lib/constant';
 
 export default function Hero() {
   const wallet = useNearWalletContext();

@@ -1,6 +1,6 @@
-import { toTokenAccountId } from '../../lib/constant';
-import { TPool } from '../../lib/useTokens';
-import { TokenArgs } from '../../pages/components/OptionsSection/OptionsSection';
+import { toTokenAccountId } from '~/lib/constant';
+import { TPool } from '~/lib/useTokens';
+import { TokenArgs } from '~/pages/components/OptionsSection/OptionsSection';
 
 import { InformationCircleIcon } from '@heroicons/react/20/solid';
 import Row from './Row';

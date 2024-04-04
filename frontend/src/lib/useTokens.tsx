@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNearWallet } from './useNearWallet';
-import {
-  SimplePool,
-  localStorageKeyCachedTokens,
-} from './constant';
+import { SimplePool, localStorageKeyCachedTokens } from './constant';
 import { TokenArgs } from '~/pages/components/OptionsSection/OptionsSection';
 
 export type TPool = {

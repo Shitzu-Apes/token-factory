@@ -7,7 +7,7 @@ import { SignMessageMethod, Wallet } from '@near-wallet-selector/core/src/lib/wa
 import { setupMyNearWallet } from '@near-wallet-selector/my-near-wallet';
 import { setupHereWallet } from '@near-wallet-selector/here-wallet';
 import { setupMeteorWallet } from '@near-wallet-selector/meteor-wallet';
-import { NFT_BASE_URL, NO_DEPOSIT, THIRTY_TGAS } from './constant';
+import { NFT_BASE_URL, NO_DEPOSIT, ThirtyTGas } from './constant';
 
 interface UseNearWalletProps {
   createAccessKeyFor: string;
@@ -41,7 +41,6 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
   }, [selector]);
 
   useEffect(() => {
-    console.log('network', network)
     const startUp = async () => {
       const selector = await setupWalletSelector({
         network,
@@ -101,7 +100,7 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
       contractId,
       method,
       args = {},
-      gas = THIRTY_TGAS,
+      gas = ThirtyTGas,
       deposit = NO_DEPOSIT
     }: CallMethodParams) => {
       if (!wallet || !accountId) throw new Error('Wallet or Account ID not initialized');

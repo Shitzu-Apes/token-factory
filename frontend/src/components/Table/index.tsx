@@ -49,7 +49,11 @@ export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: T
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white flex items-center"
                   >
                     Lock{' '}
-                    <a href="https://near.social/slimedragon.near/widget/LockLP" rel="noreferrer">
+                    <a
+                      target="_blank"
+                      href="https://near.social/slimedragon.near/widget/LockLP"
+                      rel="noreferrer"
+                    >
                       <InformationCircleIcon className="w-4 h-4 ml-1 text-gray-500 dark:text-gray-300" />
                     </a>
                   </th>

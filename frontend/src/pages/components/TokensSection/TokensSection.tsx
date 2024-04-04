@@ -25,49 +25,6 @@ function TokensSection() {
 
   const { tokens, pools, tokenIdx } = useTokens(wallet);
 
-  tokens.sort((a, b) => {
-    window.localStorage.setItem(localStorageKeySortedBy, sortedBy);
-    if (sortedBy === SortedByLiquidity) {
-      const tokenALiquidity =
-        toTokenAccountId(a.metadata.symbol) in pools
-          ? pools[toTokenAccountId(a.metadata.symbol)].liquidity
-          : BigInt(0);
-      const tokenBLiquidity =
-        toTokenAccountId(b.metadata.symbol) in pools
-          ? pools[toTokenAccountId(b.metadata.symbol)].liquidity
-          : BigInt(0);
-      return Number(tokenBLiquidity - tokenALiquidity);
-    }
-
-    if (sortedBy === SortedByIndex) {
-      return tokenIdx[a.metadata.symbol] - tokenIdx[b.metadata.symbol];
-    }
-
-    if (sortedBy === SortedByLocked) {
-      const tokenALocked =
-        toTokenAccountId(a.metadata.symbol) in pools
-          ? pools[toTokenAccountId(a.metadata.symbol)].locked.reduce(
-              (acc, [_, { amount }]) => acc + Number(amount),
-              0
-            ) / Number(pools[toTokenAccountId(a.metadata.symbol)].shares_total_supply)
-          : 0;
-      const tokenBLocked =
-        toTokenAccountId(b.metadata.symbol) in pools
-          ? pools[toTokenAccountId(b.metadata.symbol)].locked.reduce(
-              (acc, [_, { amount }]) => acc + Number(amount),
-              0
-            ) / Number(pools[toTokenAccountId(b.metadata.symbol)].shares_total_supply)
-          : 0;
-      return Number(tokenBLocked - tokenALocked);
-    }
-
-    return 0;
-  });
-
-  if (tokens.length > 0) {
-    window.localStorage.setItem(localStorageKeyCachedTokens, JSON.stringify(tokens));
-  }
-
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePage = (page: number) => {
@@ -75,8 +32,51 @@ function TokensSection() {
   };
 
   const filteredAndSortedTokens = useMemo(() => {
-    return tokens.filter((token) => {
+    const sorted = tokens.sort((a, b) => {
+      window.localStorage.setItem(localStorageKeySortedBy, sortedBy);
+      if (sortedBy === SortedByLiquidity) {
+        const tokenALiquidity =
+          toTokenAccountId(a.metadata.symbol) in pools
+            ? pools[toTokenAccountId(a.metadata.symbol)].liquidity
+            : BigInt(0);
+        const tokenBLiquidity =
+          toTokenAccountId(b.metadata.symbol) in pools
+            ? pools[toTokenAccountId(b.metadata.symbol)].liquidity
+            : BigInt(0);
+        return Number(tokenBLiquidity - tokenALiquidity);
+      }
+
+      if (sortedBy === SortedByIndex) {
+        return tokenIdx[a.metadata.symbol] - tokenIdx[b.metadata.symbol];
+      }
+
+      if (sortedBy === SortedByLocked) {
+        const tokenALocked =
+          toTokenAccountId(a.metadata.symbol) in pools
+            ? pools[toTokenAccountId(a.metadata.symbol)].locked.reduce(
+                (acc, [_, { amount }]) => acc + Number(amount),
+                0
+              ) / Number(pools[toTokenAccountId(a.metadata.symbol)].shares_total_supply)
+            : 0;
+        const tokenBLocked =
+          toTokenAccountId(b.metadata.symbol) in pools
+            ? pools[toTokenAccountId(b.metadata.symbol)].locked.reduce(
+                (acc, [_, { amount }]) => acc + Number(amount),
+                0
+              ) / Number(pools[toTokenAccountId(b.metadata.symbol)].shares_total_supply)
+            : 0;
+        return Number(tokenBLocked - tokenALocked);
+      }
+
+      return 0;
+    });
+
+    if (sorted.length > 0) {
+      window.localStorage.setItem(localStorageKeyCachedTokens, JSON.stringify(sorted));
+    }
+    return sorted.filter((token) => {
       if (!searchInput) return true;
+
       return (
         token.metadata.name.toLowerCase().includes(searchInput.toLowerCase()) ||
         token.metadata.symbol.toLowerCase().includes(searchInput.toLowerCase())

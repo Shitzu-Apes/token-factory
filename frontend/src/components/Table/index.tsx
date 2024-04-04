@@ -4,6 +4,7 @@ import { TokenArgs } from '../../pages/components/OptionsSection/OptionsSection'
 
 import { InformationCircleIcon } from '@heroicons/react/20/solid';
 import Row from './Row';
+import { getNearUSDPrice } from '../../lib/utils';
 
 export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: TPool }) {
   return (
@@ -65,6 +66,7 @@ export default function Table({ tokens, pools }: { tokens: TokenArgs[]; pools: T
                     <Row
                       key={token.metadata.symbol}
                       pool={pools[toTokenAccountId(token.metadata.symbol)]}
+                      nearUSDCPrice={getNearUSDPrice(pools)}
                       token={token}
                     />
                   );

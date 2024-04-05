@@ -169,7 +169,7 @@ const OptionsSection: FC = () => {
 
       const args = {
         owner_id: tokenArgs.owner_id,
-        total_supply: tokenArgs.total_supply,
+        total_supply: (BigInt(tokenArgs.total_supply) * BigInt(10) ** BigInt(tokenArgs.metadata.decimals)).toString(),
         metadata: tokenArgs.metadata
       };
 
@@ -192,7 +192,7 @@ const OptionsSection: FC = () => {
 
     const args = {
       owner_id: tokenArgs.owner_id,
-      total_supply: tokenArgs.total_supply,
+      total_supply: (BigInt(tokenArgs.total_supply) * BigInt(10) ** BigInt(tokenArgs.metadata.decimals)).toString(),
       metadata: tokenArgs.metadata
     };
 

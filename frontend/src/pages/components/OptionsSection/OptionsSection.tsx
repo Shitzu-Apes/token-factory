@@ -192,7 +192,7 @@ const OptionsSection: FC = () => {
 
     const args = {
       owner_id: tokenArgs.owner_id,
-      total_supply: tokenArgs.total_supply,
+      total_supply: tokenArgs.total_supply + '0'.repeat(tokenArgs.metadata.decimals),
       metadata: tokenArgs.metadata
     };
 

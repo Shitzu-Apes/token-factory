@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNearWallet } from './useNearWallet';
 import { SimplePool, localStorageKeyCachedTokens } from './constant';
 import { TokenArgs } from '~/pages/components/OptionsSection/OptionsSection';
+import { trySettingItemToLocalStorage } from './utils';
 
 export type TPool = {
   [token_contract: string]: {
@@ -68,7 +69,7 @@ export function useTokens(wallet: ReturnType<typeof useNearWallet>) {
       setTokenIdx(tokenIdx);
 
       if (tokens.length > cachedTokens.length) {
-        window.localStorage.setItem(localStorageKeyCachedTokens, JSON.stringify(tokens));
+        trySettingItemToLocalStorage(localStorageKeyCachedTokens, JSON.stringify(tokens));
       }
 
       setTokens(tokens as TokenArgs[]);

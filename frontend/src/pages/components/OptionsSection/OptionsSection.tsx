@@ -50,6 +50,18 @@ const defaultTokenArgs = (
   ownerStatus: 'idle'
 });
 
+// tailwind css version of form-control form-control-large
+const inputClass =
+  'block w-full px-3 py-2 mt-1 text-base leading-normal text-gray-700 bg-white border border-gray-300 rounded-lg appearance-none focus:outline-none focus:shadow-outline focus:border-blue-300 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:border-blue-600 dark:focus:shadow-outline';
+
+// Show input box as success state in tailwind css
+const inputValidClass =
+  'block w-full px-3 py-2 mt-1 text-base leading-normal text-gray-700 bg-white border border-green-300 rounded-lg appearance-none focus:outline-none focus:shadow-outline focus:border-green-300 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:border-green-600 dark:focus:shadow-outline';
+
+// Show input box as error state in tailwind css
+const inputInvalidClass =
+  'block w-full px-3 py-2 mt-1 text-base leading-normal text-gray-700 bg-white border border-red-300 rounded-lg appearance-none focus:outline-none focus:shadow-outline focus:border-red-300 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:border-red-600 dark:focus:shadow-outline';
+
 const fromYocto = (a: bigint) => (a ? (Number(a) / Number(OneNear)).toFixed(6) : '0');
 
 const OptionsSection: FC = () => {
@@ -81,6 +93,13 @@ const OptionsSection: FC = () => {
   >(defaultTokenArgs(wallet.accountId || ''));
 
   const [requiredDeposit, setRequiredDeposit] = useState<bigint>(BigInt(0));
+
+  useEffect(() => {
+    setTokenArgs((prevArgs) => ({
+      ...prevArgs,
+      owner_id: wallet.accountId || ''
+    }));
+  }, [wallet.accountId]);
 
   async function validateOwnerAccount(accountId: string) {
     if (accountId) {
@@ -134,14 +153,14 @@ const OptionsSection: FC = () => {
       !tokenArgs.metadata.symbol ||
       (isValidTokenId(tokenArgs.metadata.symbol) && tokenArgs.tokenSymbolStatus === 'loading')
     ) {
-      return 'form-control form-control-large';
+      return inputClass;
     } else if (
       isValidTokenId(tokenArgs.metadata.symbol) &&
       tokenArgs.tokenSymbolStatus === 'valid'
     ) {
-      return 'form-control form-control-large is-valid';
+      return inputValidClass;
     } else {
-      return 'form-control form-control-large is-invalid';
+      return inputInvalidClass;
     }
   };
 
@@ -150,11 +169,11 @@ const OptionsSection: FC = () => {
       !tokenArgs.owner_id ||
       (isValidAccountId(tokenArgs.owner_id) && tokenArgs.ownerStatus === 'loading')
     ) {
-      return 'form-control form-control-large';
+      return inputClass;
     } else if (isValidAccountId(tokenArgs.owner_id) && tokenArgs.ownerStatus === 'valid') {
-      return 'form-control form-control-large is-valid';
+      return inputValidClass;
     } else {
-      return 'form-control form-control-large is-invalid';
+      return inputInvalidClass;
     }
   };
 
@@ -276,7 +295,7 @@ const OptionsSection: FC = () => {
           <div className="input-group">
             <input
               type="text"
-              className="form-control form-control-large dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white"
+              className={`${inputClass} dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white`}
               id="tokenName"
               placeholder="Epic Moon Rocket"
               value={tokenArgs.metadata.name}
@@ -301,6 +320,8 @@ const OptionsSection: FC = () => {
             <input
               type="text"
               className={
+                inputClass +
+                ' ' +
                 tokenIdClass() +
                 ' dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white'
               }
@@ -344,13 +365,13 @@ const OptionsSection: FC = () => {
           <div className="input-group">
             <input
               type="number"
-              className="form-control form-control-large dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white"
+              className={`${inputClass} dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white`}
               id="totalSupply"
               placeholder="1000000000"
               value={+tokenArgs.total_supply}
               onChange={(e) => {
                 const validateTotalSupply = (value: string) => {
-                  const num = BigInt(value);
+                  const num = BigInt(value + '0'.repeat(tokenArgs.metadata.decimals));
                   if (num > BigInt(0) && num <= BigInt(MaxU128)) {
                     return value;
                   } else {
@@ -374,7 +395,7 @@ const OptionsSection: FC = () => {
           <div className="input-group">
             <input
               type="number"
-              className="form-control form-control-large dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white"
+              className={`${inputClass} dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white`}
               id="tokenDecimals"
               placeholder="18"
               value={tokenArgs.metadata.decimals}
@@ -463,6 +484,8 @@ const OptionsSection: FC = () => {
             <input
               type="text"
               className={
+                inputClass +
+                ' ' +
                 ownerIdClass() +
                 ' dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white'
               }

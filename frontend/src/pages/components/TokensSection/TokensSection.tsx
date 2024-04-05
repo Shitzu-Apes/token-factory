@@ -1,4 +1,3 @@
-import { FunnelIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
 import { useMemo, useState } from 'react';
 
 import PaginationBox from '~/components/PaginationBox';
@@ -7,9 +6,11 @@ import {
   localStorageKeyCachedTokens,
   localStorageKeySortedBy,
   toTokenAccountId
-} from '~/lib/constant';
+} from '../../../lib/constant';
+import { BarsArrowDownIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
 import { useNearWalletContext } from '~/lib/useNearWallet';
 import { useTokens } from '~/lib/useTokens';
+import { trySettingItemToLocalStorage } from '~/lib/utils';
 
 const SortedByLiquidity = 'liquidity';
 const SortedByLocked = 'lock';
@@ -33,7 +34,7 @@ function TokensSection() {
 
   const filteredAndSortedTokens = useMemo(() => {
     const sorted = tokens.sort((a, b) => {
-      window.localStorage.setItem(localStorageKeySortedBy, sortedBy);
+      trySettingItemToLocalStorage(localStorageKeySortedBy, sortedBy);
       if (sortedBy === SortedByLiquidity) {
         const tokenALiquidity =
           toTokenAccountId(a.metadata.symbol) in pools
@@ -72,7 +73,7 @@ function TokensSection() {
     });
 
     if (sorted.length > 0) {
-      window.localStorage.setItem(localStorageKeyCachedTokens, JSON.stringify(sorted));
+      trySettingItemToLocalStorage(localStorageKeyCachedTokens, JSON.stringify(sorted));
     }
     return sorted.filter((token) => {
       if (!searchInput) return true;
@@ -116,7 +117,7 @@ function TokensSection() {
                   aria-label="Tabs"
                 >
                   <div className="bg-primary-dark flex items-center justify-center h-10 w-10 rounded-l-lg">
-                    <FunnelIcon
+                    <BarsArrowDownIcon
                       className="h-6 w-6 text-gray-100 dark:text-gray-900"
                       aria-hidden="true"
                     />

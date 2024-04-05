@@ -9,13 +9,13 @@ import { ArrowTopRightOnSquareIcon } from '@heroicons/react/20/solid';
 
 export default function Row({
   pool,
-  token
+  token,
+  nearUSDCPrice
 }: {
   pool: TPool[string] | undefined;
   token: TokenArgs;
+  nearUSDCPrice: bigint | null;
 }) {
-  //   const pool = pools[toTokenAccountId(token.metadata.symbol)];
-
   return (
     <tr key={token.metadata.symbol}>
       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm sm:pl-0">
@@ -45,11 +45,30 @@ export default function Row({
         </a>
       </td>
       <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 dark:text-gray-300">
-        {bnFormatter(token.total_supply.toString(), token.metadata.decimals)}
+        <div className="font-medium text-gray-900 dark:text-gray-100">
+          {bnFormatter(token.total_supply.toString(), token.metadata.decimals)}
+        </div>
+        {pool && (
+          <div className="mt-1 text-gray-500 dark:text-gray-300">
+            ${' '}
+            {bnFormatter(
+              Math.floor(
+                (Number(token.total_supply) * pool.price) / Number(nearUSDCPrice)
+              ).toString(),
+              6,
+              2,
+              2
+            )}
+          </div>
+        )}
       </td>
       <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 dark:text-gray-300">
         <div className="font-medium text-gray-900 dark:text-white">
-          {pool ? `Ⓝ ${bnFormatter(pool.liquidity.toString())}` : 'Not Found'}
+          {pool
+            ? nearUSDCPrice
+              ? `$ ${bnFormatter((pool.liquidity / nearUSDCPrice).toString(), 24 - (24 - 6), 2, 2)}`
+              : `Ⓝ ${bnFormatter(pool.liquidity.toString())}`
+            : 'Not Found'}
         </div>
 
         {pool && (
@@ -74,7 +93,16 @@ export default function Row({
       </td>
       <td className="whitespace-nowrap px-3 py-3 text-sm text-gray-500 dark:text-gray-300">
         <div className="font-medium text-gray-900 dark:text-white">
-          Ⓝ {pool ? priceFormatter(pool.price, token.metadata.decimals, 8, 12) : 0}
+          {pool
+            ? nearUSDCPrice
+              ? `$ ${priceFormatter(
+                  pool.price / Number(nearUSDCPrice), // price is in (near / token)
+                  token.metadata.decimals + 24 - 6,
+                  8,
+                  12
+                )}`
+              : `Ⓝ ${priceFormatter(pool.price, token.metadata.decimals, 8, 12)}`
+            : 0}
         </div>
         <a
           href={`https://app.ref.finance/#wrap.near|${toTokenAccountId(token.metadata.symbol)}`}

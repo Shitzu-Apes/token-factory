@@ -350,7 +350,7 @@ const OptionsSection: FC = () => {
               value={+tokenArgs.total_supply}
               onChange={(e) => {
                 const validateTotalSupply = (value: string) => {
-                  const num = BigInt(value);
+                  const num = BigInt(value + '0'.repeat(tokenArgs.metadata.decimals));
                   if (num > BigInt(0) && num <= BigInt(MaxU128)) {
                     return value;
                   } else {

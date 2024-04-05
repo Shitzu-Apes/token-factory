@@ -61,7 +61,7 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
   }, [network]);
 
   useEffect(() => {
-    if (!selector) return
+    if (!selector) return;
     const handleSignedIn = async () => {
       const isSignedIn = selector.isSignedIn();
       if (isSignedIn) {
@@ -70,11 +70,11 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
         setWallet(walletInstance);
         setAccountId(accountId);
       }
-    }
-    const subscription = selector.store.observable.subscribe(handleSignedIn)
-    selector.on('signedIn', handleSignedIn)
-    return subscription.unsubscribe()
-  }, [selector])
+    };
+    const subscription = selector.store.observable.subscribe(handleSignedIn);
+    selector.on('signedIn', handleSignedIn);
+    return subscription.unsubscribe();
+  }, [selector]);
 
   const isConnected = useCallback(() => !!wallet, [wallet, accountId]);
 

@@ -16,14 +16,6 @@ export default function Row({
   token: TokenArgs;
   nearUSDCPrice: bigint | null;
 }) {
-  //   const pool = pools[toTokenAccountId(token.metadata.symbol)];
-  if (pool && nearUSDCPrice) {
-    console.log(
-      token.metadata.symbol,
-      Math.floor((Number(token.total_supply) * pool.price) / Number(nearUSDCPrice))
-    );
-  }
-
   return (
     <tr key={token.metadata.symbol}>
       <td className="whitespace-nowrap py-3 pl-4 pr-3 text-sm sm:pl-0">

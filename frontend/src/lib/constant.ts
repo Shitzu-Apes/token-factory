@@ -11,7 +11,6 @@ export const MinAccountIdLen = 2;
 export const MaxAccountIdLen = 64;
 export const ValidAccountRe = /^(([a-z\d]+[-_])*[a-z\d]+\.)*([a-z\d]+[-_])*[a-z\d]+$/;
 export const ValidTokenIdRe = /^[a-z\d]+$/;
-export const THIRTY_TGAS = '30000000000000';
 export const NO_DEPOSIT = '0';
 export const SimplePool = 'SIMPLE_POOL';
 
@@ -21,7 +20,7 @@ export const PoolStorageDeposit = BigInt(500) * BigInt(10) ** BigInt(19);
 
 export const OneNear = BigInt(10) ** BigInt(24);
 export const TGas = BigInt(10) ** BigInt(12);
-export const BoatOfGas = BigInt(200) * TGas;
+export const ThirtyTGas = (BigInt(30) * TGas).toString();
 
 export const toTokenAccountId = (tokenId: string) =>
   `${tokenId.toLowerCase()}.${import.meta.env.VITE_CONTRACT_ID}`;

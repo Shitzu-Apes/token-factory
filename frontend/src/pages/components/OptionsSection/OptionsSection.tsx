@@ -1,5 +1,6 @@
 import { XMarkIcon } from '@heroicons/react/20/solid';
-import { useEffect, useState } from 'react';
+import { useNotifications } from '@web3-onboard/react';
+import { FC, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import {
@@ -7,11 +8,11 @@ import {
   MaxU128,
   MinAccountIdLen,
   NO_DEPOSIT,
-  THIRTY_TGAS,
   ValidAccountRe,
   ValidTokenIdRe,
-  BoatOfGas,
-  OneNear
+  OneNear,
+  ThirtyTGas,
+  TGas
 } from '~/lib/constant';
 import { imageFileToBase64 } from '~/lib/imageFileToBase64';
 import { useNearWalletContext } from '~/lib/useNearWallet';
@@ -51,8 +52,10 @@ const defaultTokenArgs = (
 
 const fromYocto = (a: bigint) => (a ? (Number(a) / Number(OneNear)).toFixed(6) : '0');
 
-const OptionsSection = () => {
+const OptionsSection: FC = () => {
   const wallet = useNearWalletContext();
+
+  const [_, customNotification] = useNotifications();
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: async (acceptedFiles) => {
@@ -120,7 +123,10 @@ const OptionsSection = () => {
 
   const isValidTokenId = (tokenId: string) => {
     tokenId = tokenId.toLowerCase();
-    return tokenId.match(ValidTokenIdRe) && isValidAccountId(tokenId + '.' + import.meta.env.VITE_CONTRACT_ID!);
+    return (
+      tokenId.match(ValidTokenIdRe) &&
+      isValidAccountId(tokenId + '.' + import.meta.env.VITE_CONTRACT_ID!)
+    );
   };
 
   const tokenIdClass = () => {
@@ -155,21 +161,20 @@ const OptionsSection = () => {
   useEffect(() => {
     (async () => {
       if (!wallet.accountId) return;
+      if (
+        !tokenArgs.owner_id ||
+        (isValidAccountId(tokenArgs.owner_id) && tokenArgs.ownerStatus === 'loading')
+      )
+        return;
 
       const args = {
-        owner_id: 'pysr.near',
-        total_supply: '1000000000',
-        metadata: {
-          spec: 'ft-1.0.0',
-          name: 'hello',
-          symbol: 'wassup',
-          icon: 'somedatasvg',
-          decimals: 18
-        }
+        owner_id: tokenArgs.owner_id,
+        total_supply: tokenArgs.total_supply,
+        metadata: tokenArgs.metadata
       };
 
       const required_deposit = await wallet.viewMethod({
-        contractId: 'tkn.near',
+        contractId: import.meta.env.VITE_CONTRACT_ID!,
         method: 'get_required_deposit',
         args: {
           account_id: wallet.accountId,
@@ -201,7 +206,7 @@ const OptionsSection = () => {
         params: {
           methodName: 'storage_deposit',
           args: {},
-          gas: BoatOfGas.toString(),
+          gas: ThirtyTGas,
           deposit: requiredDeposit.toString()
         }
       });
@@ -211,20 +216,47 @@ const OptionsSection = () => {
       type: 'FunctionCall',
       params: {
         methodName: 'create_token',
-        args,
-        gas: THIRTY_TGAS,
+        args: { args },
+        gas: (BigInt(150) * TGas).toString(),
         deposit: NO_DEPOSIT
       }
     });
 
-    await wallet.wallet?.signAndSendTransactions({
-      transactions: [
-        {
-          receiverId: import.meta.env.VITE_CONTRACT_ID!,
-          actions
-        }
-      ]
+    const { update } = customNotification({
+      eventCode: 'createToken',
+      type: 'pending',
+      message: 'Creating your token...'
     });
+    try {
+      const res = await wallet.wallet?.signAndSendTransactions({
+        transactions: [
+          {
+            receiverId: import.meta.env.VITE_CONTRACT_ID!,
+            actions
+          }
+        ]
+      });
+      let hash: string | undefined;
+      if (typeof res === 'object') {
+        hash = res[0].transaction_outcome.id;
+      }
+      update({
+        eventCode: 'createTokenSuccess',
+        type: 'success',
+        message: 'Token creation succeeded! Click here',
+        onClick: () => window.open(`${import.meta.env.VITE_EXPLORER_URL}/txns/${hash}`, '_blank'),
+        autoDismiss: 15_000
+      });
+    } catch (err) {
+      console.error(err);
+      update({
+        eventCode: 'createTokenError',
+        type: 'error',
+        message: 'Token creation failed!',
+        autoDismiss: 5_000
+      });
+      throw err;
+    }
   }
 
   // Decoy
@@ -298,7 +330,7 @@ const OptionsSection = () => {
             </div>
           )}
           <small>
-            It&apos;ll be used to identify the token and to create an Account ID for the token
+            It&apos;ll be used to identify the token and to create an Account ID for the token{' '}
             <code>
               {tokenArgs.metadata.symbol
                 ? tokenArgs.metadata.symbol.toLowerCase() + '.' + import.meta.env.VITE_CONTRACT_ID!
@@ -459,8 +491,11 @@ const OptionsSection = () => {
         </div>
         <div className="form-group">
           <div>
-            <button className="cursor-pointer rounded-md text-gray-800 px-3.5 py-2.5 text-sm font-semibold bg-primary-dark shadow-sm hover:bg-indigo-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white
-" onClick={createToken}>
+            <button
+              className="cursor-pointer rounded-md text-gray-800 px-3.5 py-2.5 text-sm font-semibold bg-primary-dark shadow-sm hover:bg-indigo-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white
+"
+              onClick={createToken}
+            >
               Create Token ({fromYocto(requiredDeposit)} Ⓝ)
             </button>
           </div>

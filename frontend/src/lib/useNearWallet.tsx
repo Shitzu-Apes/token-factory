@@ -7,7 +7,7 @@ import { SignMessageMethod, Wallet } from '@near-wallet-selector/core/src/lib/wa
 import { setupMyNearWallet } from '@near-wallet-selector/my-near-wallet';
 import { setupHereWallet } from '@near-wallet-selector/here-wallet';
 import { setupMeteorWallet } from '@near-wallet-selector/meteor-wallet';
-import { NFT_BASE_URL, NO_DEPOSIT, THIRTY_TGAS } from './constant';
+import { NFT_BASE_URL, NO_DEPOSIT, ThirtyTGas } from './constant';
 
 interface UseNearWalletProps {
   createAccessKeyFor: string;
@@ -41,7 +41,6 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
   }, [selector]);
 
   useEffect(() => {
-    console.log('network', network)
     const startUp = async () => {
       const selector = await setupWalletSelector({
         network,
@@ -61,7 +60,23 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
     startUp();
   }, [network]);
 
-  const isConnected = useCallback(() => !!wallet, [wallet]);
+  useEffect(() => {
+    if (!selector) return
+    const handleSignedIn = async () => {
+      const isSignedIn = selector.isSignedIn();
+      if (isSignedIn) {
+        const walletInstance = await selector.wallet();
+        const accountId = selector.store.getState().accounts[0].accountId;
+        setWallet(walletInstance);
+        setAccountId(accountId);
+      }
+    }
+    const subscription = selector.store.observable.subscribe(handleSignedIn)
+    selector.on('signedIn', handleSignedIn)
+    return subscription.unsubscribe()
+  }, [selector])
+
+  const isConnected = useCallback(() => !!wallet, [wallet, accountId]);
 
   const signIn = useCallback(async () => {
     if (!selector || !createAccessKeyFor) throw new Error('Contract ID not initialized');
@@ -101,7 +116,7 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
       contractId,
       method,
       args = {},
-      gas = THIRTY_TGAS,
+      gas = ThirtyTGas,
       deposit = NO_DEPOSIT
     }: CallMethodParams) => {
       if (!wallet || !accountId) throw new Error('Wallet or Account ID not initialized');
@@ -167,7 +182,7 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
           media: string;
         };
       }[] = await viewMethod({
-        contractId: 'shitzu.bodega-lab.near',
+        contractId: import.meta.env.VITE_SHITZU_NFT_CONTRACT_ID!,
         method: 'nft_tokens_for_owner',
         args: {
           account_id: accountId,

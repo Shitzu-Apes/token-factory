@@ -19,7 +19,7 @@ const rowsPerPage = 30;
 function TokensSection() {
   const wallet = useNearWalletContext();
   const [sortedBy, setSortedBy] = useState(
-    window.localStorage.getItem(localStorageKeySortedBy) || SortedByIndex
+    window.localStorage.getItem(localStorageKeySortedBy) || SortedByLiquidity
   );
   const [searchInput, setSearchInput] = useState('');
 

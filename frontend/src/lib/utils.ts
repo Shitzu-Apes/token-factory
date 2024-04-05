@@ -9,3 +9,15 @@ export function getNearUSDPrice(pools: TPool) {
     return null;
   }
 }
+
+export function trySettingItemToLocalStorage(key: string, value: string): boolean {
+  try {
+    window.localStorage.setItem(key, value);
+
+    return true;
+  } catch (e) {
+    console.error(e);
+
+    return false;
+  }
+}

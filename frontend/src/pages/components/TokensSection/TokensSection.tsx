@@ -10,6 +10,7 @@ import {
 import { BarsArrowDownIcon, MagnifyingGlassCircleIcon } from '@heroicons/react/20/solid';
 import { useNearWalletContext } from '~/lib/useNearWallet';
 import { useTokens } from '~/lib/useTokens';
+import { trySettingItemToLocalStorage } from '~/lib/utils';
 
 const SortedByLiquidity = 'liquidity';
 const SortedByLocked = 'lock';
@@ -33,7 +34,7 @@ function TokensSection() {
 
   const filteredAndSortedTokens = useMemo(() => {
     const sorted = tokens.sort((a, b) => {
-      window.localStorage.setItem(localStorageKeySortedBy, sortedBy);
+      trySettingItemToLocalStorage(localStorageKeySortedBy, sortedBy);
       if (sortedBy === SortedByLiquidity) {
         const tokenALiquidity =
           toTokenAccountId(a.metadata.symbol) in pools
@@ -72,7 +73,7 @@ function TokensSection() {
     });
 
     if (sorted.length > 0) {
-      window.localStorage.setItem(localStorageKeyCachedTokens, JSON.stringify(sorted));
+      trySettingItemToLocalStorage(localStorageKeyCachedTokens, JSON.stringify(sorted));
     }
     return sorted.filter((token) => {
       if (!searchInput) return true;

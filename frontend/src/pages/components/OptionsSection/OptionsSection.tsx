@@ -94,6 +94,13 @@ const OptionsSection: FC = () => {
 
   const [requiredDeposit, setRequiredDeposit] = useState<bigint>(BigInt(0));
 
+  useEffect(() => {
+    setTokenArgs((prevArgs) => ({
+      ...prevArgs,
+      owner_id: wallet.accountId || ''
+    }));
+  }, [wallet.accountId]);
+
   async function validateOwnerAccount(accountId: string) {
     if (accountId) {
       const exist = await wallet.doesAccountExist(accountId);

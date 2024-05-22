@@ -95,10 +95,11 @@ const OptionsSection: FC = () => {
   const [requiredDeposit, setRequiredDeposit] = useState<bigint>(BigInt(0));
 
   useEffect(() => {
-    setTokenArgs((prevArgs) => ({
-      ...prevArgs,
-      owner_id: wallet.accountId || ''
-    }));
+    (async () => {
+      if (wallet.accountId) {
+        await validateOwnerAccount(wallet.accountId);
+      }
+    })();
   }, [wallet.accountId]);
 
   async function validateOwnerAccount(accountId: string) {
@@ -106,6 +107,7 @@ const OptionsSection: FC = () => {
       const exist = await wallet.doesAccountExist(accountId);
       setTokenArgs((prevArgs) => ({
         ...prevArgs,
+        owner_id: accountId,
         ownerStatus: exist ? 'valid' : 'invalid'
       }));
     }
@@ -211,6 +213,13 @@ const OptionsSection: FC = () => {
   async function createToken() {
     if (!wallet.wallet) return;
     if (!wallet.shitzuNFT) return;
+    if (!tokenArgs.owner_id) {
+      return customNotification({
+        eventCode: 'createToken',
+        type: 'error',
+        message: 'Missing owner id'
+      });
+    }
 
     const args = {
       owner_id: tokenArgs.owner_id,
@@ -288,10 +297,12 @@ const OptionsSection: FC = () => {
   useEffect(() => {
     if (wallet.shitzuNFT) return;
 
-    setTimeout(() => {
+    const interval = setInterval(() => {
       setTokenArgs(defaultTokenArgs(''));
     }, 5000);
-  }, [tokenArgs.ownerStatus, tokenArgs.tokenSymbolStatus]);
+
+    return () => clearInterval(interval);
+  }, [wallet.shitzuNFT]);
 
   return (
     <div>
@@ -499,7 +510,7 @@ const OptionsSection: FC = () => {
               placeholder={wallet.accountId || ''}
               value={tokenArgs.owner_id}
               onChange={async (e) => {
-                const rawAccountId = e.target.value;
+                const rawAccountId = e.target.value || wallet.accountId || '';
                 setTokenArgs((prevArgs) => ({
                   ...prevArgs,
                   owner_id: rawAccountId,

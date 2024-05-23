@@ -266,7 +266,7 @@ const OptionsSection: FC = () => {
             memo: `Tip for creating token ${tokenArgs.metadata.symbol}`
           },
           gas: (BigInt(15) * TGas).toString(),
-          deposit: NO_DEPOSIT
+          deposit: '1'
         }
       });
     }

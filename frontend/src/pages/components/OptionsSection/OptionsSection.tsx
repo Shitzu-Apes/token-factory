@@ -1,4 +1,4 @@
-import { XMarkIcon } from '@heroicons/react/20/solid';
+import { ArrowTopRightOnSquareIcon, XMarkIcon } from '@heroicons/react/20/solid';
 import { useNotifications } from '@web3-onboard/react';
 import { FC, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -34,6 +34,7 @@ export type TokenArgs = {
 const defaultTokenArgs = (
   accountId: string
 ): TokenArgs & {
+  dao_tip: string;
   tokenSymbolStatus: 'idle' | 'loading' | 'valid' | 'invalid';
   ownerStatus: 'idle' | 'loading' | 'valid' | 'invalid';
 } => ({
@@ -46,6 +47,7 @@ const defaultTokenArgs = (
     icon: '',
     decimals: 18
   },
+  dao_tip: '1000000',
   tokenSymbolStatus: 'idle',
   ownerStatus: 'idle'
 });
@@ -85,12 +87,9 @@ const OptionsSection: FC = () => {
     }
   });
 
-  const [tokenArgs, setTokenArgs] = useState<
-    TokenArgs & {
-      tokenSymbolStatus: 'loading' | 'valid' | 'invalid' | 'idle';
-      ownerStatus: 'loading' | 'valid' | 'invalid' | 'idle';
-    }
-  >(defaultTokenArgs(wallet.accountId || ''));
+  const [tokenArgs, setTokenArgs] = useState<ReturnType<typeof defaultTokenArgs>>(
+    defaultTokenArgs(wallet.accountId || '')
+  );
 
   const [requiredDeposit, setRequiredDeposit] = useState<bigint>(BigInt(0));
 
@@ -255,6 +254,22 @@ const OptionsSection: FC = () => {
         deposit: NO_DEPOSIT
       }
     });
+
+    if (tokenArgs.dao_tip !== '0' && tokenArgs.owner_id === wallet.accountId) {
+      actions.push({
+        type: 'FunctionCall',
+        params: {
+          methodName: 'ft_transfer',
+          args: {
+            receiver_id: 'shitzu.sputnik-dao.near',
+            amount: tokenArgs.dao_tip,
+            memo: `Tip for creating token ${tokenArgs.metadata.symbol}`
+          },
+          gas: (BigInt(15) * TGas).toString(),
+          deposit: NO_DEPOSIT
+        }
+      });
+    }
 
     const { update } = customNotification({
       eventCode: 'createToken',
@@ -529,6 +544,57 @@ const OptionsSection: FC = () => {
           )}
           <small>This account will own the total supply of the newly created token</small>
         </div>
+
+        <div className="form-group">
+          <label htmlFor="daoTip">
+            Tip to{' '}
+            <a
+              href="https://near.org/astraplusplus.ndctools.near/widget/home?tab=proposals&daoId=shitzu.sputnik-dao.near&page=dao"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-dark dark:text-primary-light underline"
+            >
+              Shitzu DAO <ArrowTopRightOnSquareIcon className="h-4 w-4 inline" />
+            </a>
+          </label>
+          <div className={`input-group ${tokenArgs.owner_id !== wallet.accountId && 'hidden'}`}>
+            <input
+              type="number"
+              className={`${inputClass} dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white`}
+              id="daoTip"
+              placeholder="10000000"
+              disabled={tokenArgs.owner_id !== wallet.accountId}
+              value={+tokenArgs.dao_tip}
+              onChange={(e) => {
+                const validateTip = (value: string) => {
+                  const num = BigInt(value + '0'.repeat(tokenArgs.metadata.decimals));
+                  const totalSupply = BigInt(
+                    tokenArgs.total_supply + '0'.repeat(tokenArgs.metadata.decimals)
+                  );
+                  if (num > BigInt(0) && num <= BigInt(MaxU128) && num <= totalSupply) {
+                    return value;
+                  } else {
+                    return '1';
+                  }
+                };
+                const dao_tip = validateTip(e.target.value);
+
+                setTokenArgs((prevArgs) => ({
+                  ...prevArgs,
+                  dao_tip
+                }));
+              }}
+            />
+          </div>
+          {tokenArgs.owner_id !== wallet.accountId && (
+            <div>
+              <small className="text-yellow-600">
+                <b>Token creator need to be owner in order to donate.</b>
+              </small>
+            </div>
+          )}
+        </div>
+
         <div className="form-group">
           <div>
             <button

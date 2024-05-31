@@ -255,19 +255,49 @@ const OptionsSection: FC = () => {
       }
     });
 
-    if (tokenArgs.dao_tip !== '0' && tokenArgs.owner_id === wallet.accountId) {
-      actions.push({
-        type: 'FunctionCall',
-        params: {
-          methodName: 'ft_transfer',
-          args: {
-            receiver_id: 'shitzu.sputnik-dao.near',
-            amount: tokenArgs.dao_tip,
-            memo: `Tip for creating token ${tokenArgs.metadata.symbol}`
+    const transactions = [
+      {
+        receiverId: import.meta.env.VITE_CONTRACT_ID!,
+        actions
+      }
+    ];
+
+    if (
+      tokenArgs.dao_tip !== '0' &&
+      tokenArgs.owner_id === wallet.accountId &&
+      import.meta.env.VITE_CONTRACT_ID
+    ) {
+      transactions.push({
+        receiverId: `${tokenArgs.metadata.symbol.toLowerCase()}.${import.meta.env.VITE_CONTRACT_ID}`,
+        actions: [
+          {
+            type: 'FunctionCall',
+            params: {
+              methodName: 'storage_deposit',
+              args: {
+                account_id: 'shitzu.sputnik-dao.near'
+              },
+              gas: 20_000_000_000_000n.toString(),
+              deposit: '1250000000000000000000'
+            }
           },
-          gas: (BigInt(15) * TGas).toString(),
-          deposit: '1'
-        }
+          {
+            type: 'FunctionCall',
+            params: {
+              methodName: 'ft_transfer',
+              args: {
+                receiver_id: 'shitzu.sputnik-dao.near',
+                amount: (
+                  BigInt(tokenArgs.dao_tip) *
+                  BigInt(10) ** BigInt(tokenArgs.metadata.decimals)
+                ).toString(),
+                memo: `Tip for creating token ${tokenArgs.metadata.symbol}`
+              },
+              gas: (BigInt(15) * TGas).toString(),
+              deposit: '1'
+            }
+          }
+        ]
       });
     }
 
@@ -278,12 +308,7 @@ const OptionsSection: FC = () => {
     });
     try {
       const res = await wallet.wallet?.signAndSendTransactions({
-        transactions: [
-          {
-            receiverId: import.meta.env.VITE_CONTRACT_ID!,
-            actions
-          }
-        ]
+        transactions
       });
       let hash: string | undefined;
       if (typeof res === 'object') {
@@ -562,7 +587,7 @@ const OptionsSection: FC = () => {
               type="number"
               className={`${inputClass} dark:bg-gray-800 dark:text-white focus:dark:bg-gray-800 focus:dark:text-white`}
               id="daoTip"
-              placeholder="10000000"
+              placeholder="0"
               disabled={tokenArgs.owner_id !== wallet.accountId}
               value={+tokenArgs.dao_tip}
               onChange={(e) => {
@@ -574,7 +599,7 @@ const OptionsSection: FC = () => {
                   if (num > BigInt(0) && num <= BigInt(MaxU128) && num <= totalSupply) {
                     return value;
                   } else {
-                    return '1';
+                    return '0';
                   }
                 };
                 const dao_tip = validateTip(e.target.value);

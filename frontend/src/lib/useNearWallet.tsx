@@ -198,7 +198,7 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
   }, [accountId, provider]);
 
   return {
-    shitzuNFT,
+    shitzuNFT: true,
     wallet,
     provider,
     accountId,

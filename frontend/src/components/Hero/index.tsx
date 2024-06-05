@@ -77,8 +77,16 @@ export default function Hero() {
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="rounded-lg p-8 flex flex-col items-center justify-center">
                 <h2 className="text-2xl font-bold text-center text-primary-light leading-relaxed">
-                  Only Shitzu NFT holder can deploy token.
-                  <br />
+                  Only Shitzu NFT staker can deploy token.
+                </h2>
+                <a
+                  href="https://app.shitzuapes.xyz/shitstars"
+                  target="_blank"
+                  className="my-6 cursor-pointer rounded-lg text-center bg-primary-dark px-6 py-2 text-lg font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white hover:bg-primary-light"
+                >
+                  Stake NFT and Become Shitstar &rarr;
+                </a>
+                <h2 className="text-2xl font-bold text-center text-primary-light leading-relaxed">
                   Check us out on NFT marketplace.
                 </h2>
                 <div className="flex gap-5 flex-wrap">

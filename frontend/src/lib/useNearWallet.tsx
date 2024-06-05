@@ -173,32 +173,23 @@ export function useNearWallet({ createAccessKeyFor, network }: UseNearWalletProp
         return;
       }
 
-      const [shitzuNftId]: {
-        token_id: string;
-        owner_id: string;
-        metadata: {
-          title: string;
-          description: string;
-          media: string;
-        };
-      }[] = await viewMethod({
-        contractId: import.meta.env.VITE_SHITZU_NFT_CONTRACT_ID!,
-        method: 'nft_tokens_for_owner',
+      const primaryNft: [string, string] | null = await viewMethod({
+        contractId: 'rewards.0xshitzu.near',
+        method: 'primary_nft_of',
         args: {
-          account_id: accountId,
-          from_index: '0',
-          limit: 1
+          account_id: accountId
         }
       });
 
-      if (shitzuNftId) {
-        setShitzuNFT(`${NFT_BASE_URL}/${shitzuNftId.metadata.media}`);
+      if (primaryNft !== null) {
+        const [tokenId, _score] = primaryNft;
+        setShitzuNFT(`${NFT_BASE_URL}/${tokenId}.png`);
       }
     })();
   }, [accountId, provider]);
 
   return {
-    shitzuNFT: true,
+    shitzuNFT,
     wallet,
     provider,
     accountId,
